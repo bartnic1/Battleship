@@ -9,8 +9,11 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use("/public",express.static(__dirname + "/public"));
 
+const gridSettings = {}
+
 app.get("/", (req, res) => {
-  res.render("battlepage");
+  templateVars = gridSettings;
+  res.render("battlepage", templateVars);
 });
 
 app.listen(PORT, () => {
