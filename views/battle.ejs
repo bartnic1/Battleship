@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="../public/battle.css">
+    <script src="battleJquery.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1 class="title">Battleship Simulator</h1>
+    </header>
+    <div class="playspace">
+       <!-- Form of grid-area: N/W/S/E. Need at least a difference of 1. -->
+       <div class="board1">
+        <%const z = gridBoundary.letters%>
+        <div class="box" style="grid-area: 1/1/1/1"></div>
+        <%for(let i = 2; i <= 11; i++){%>
+          <div class="box" style="grid-area: <%=1%>/<%=i%>/<%=2%>/<%=i+1%>"><%=z[i-2]%></div>
+          <div class="box" style="grid-area: <%=i%>/<%=1%>/<%=i+1%>/<%=2%>"><%=i-1%></div>
+        <%for(let j = 2; j <= 11; j++){%>
+          <div class="box" id=<%=i-1%><%=z[j-2]%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
+        <%}};%>
+      </div>
+      <div class="board2">
+        <div class="box" style="grid-area: 1/1/1/1"></div>
+        <%for(let i = 2; i <= 11; i++){%>
+        <div class="box" style="grid-area: <%=i%>/<%=1%>/<%=i+1%>/<%=2%>"><%=i-1%></div>
+        <div class="box" style="grid-area: <%=1%>/<%=i%>/<%=2%>/<%=i+1%>"><%=z[i-2]%></div>
+        <%for(let j = 2; j <= 11; j++){%>
+        <div class="box" id=<%=i-1%><%=z[j-2]%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
+        <%}}%>
+      </div>
+ </div>
+  </body>
+</html>

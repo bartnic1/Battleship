@@ -8,13 +8,21 @@ const bodyParser = require("body-parser");
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use("/public",express.static(__dirname + "/public"));
+//Doesn't seem to work:
+// app.use(express.static('./public'))
 
-const gridSettings = {}
+
+const gridSettings = {
+  gridBoundary: {letters: 'abcdefghij'}
+};
+
+app.get("/battle", (req, res) => {
+  res.render("battlepage", gridSettings);
+});
 
 app.get("/", (req, res) => {
-  templateVars = gridSettings;
-  res.render("battlepage", templateVars);
-});
+  res.render("intro");
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
