@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname,"../../public")));
 
 const gridSettings = {
-  gridBoundary: {letters: 'abcdefghij'}
+  gridBoundary: {letters: 'ABCDEFGHIJ'}
 };
 
 app.get("/battle", (req, res) => {
