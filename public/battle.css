@@ -1,7 +1,6 @@
 /* Width: 90%, margin: auto
 will auto-center */
 
-
 html, body {
   position: relative;
   margin: 0;
@@ -15,7 +14,7 @@ body {
 }
 
 header {
-  margin-top: 15px;
+  padding-top: 10px;
 }
 
 /* latin */
@@ -28,7 +27,7 @@ header {
 
 .title{
   text-align: center;
-  padding-top: 20px;
+  padding-top: 10px;
   margin: 0;
   color: #859ec6;
   font-family: 'Aldrich';
@@ -51,17 +50,18 @@ header {
 }
 
 .playspace{
+  float: right;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-column-gap: 50px;
+  grid-column-gap: 20px;
   background-color: #16214f;
   /*Absolute will set position relative to containing element (if none, document body)*/
   /*border: 2px solid #FFFFFF;*/
   position: relative;
-  height: 60%;
-  width: 70%;
-  top: 5%;
-  left: 25%;
+  height: auto;
+  width: 80%;
+  top: 3%;
+  /*transform: translate(-50%, 20%);*/
 }
 
 .box{
@@ -85,15 +85,15 @@ header {
   flex-wrap: wrap;
   position: relative;
   background-color: #adadad;
-  height: 17%;
-  width: 33%;
+  height: 20%;
+  width: 37%;
   /*top right down left*/
-  margin-top: 3%;
+  margin-top: 1%;
   float: right;
 }
 
 #ships-box1{
-  margin-right: 6.5%;
+  margin-right: 2.5%;
 }
 
 #ships-box2{
@@ -105,4 +105,17 @@ header {
   width: 31%;
   margin: 1%;
   background-color: #ffffff;
+}
+
+.log {
+  padding: 1%;
+  float: right;
+  position: relative;
+  height: 30%;
+  width: 15.5%;
+  right: 1%;
+  top: -13%;
+  background-color: #fcfcc7;
+  text-align: center;
+  font-family: "Aldrich";
 }
