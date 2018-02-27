@@ -1,6 +1,9 @@
 /* Width: 90%, margin: auto
 will auto-center */
 
+/*top right down left*/
+/*margin: 1 2 3 4*/
+
 html, body {
   position: relative;
   margin: 0;
@@ -14,7 +17,7 @@ body {
 }
 
 header {
-  padding-top: 10px;
+  padding-top: 5px;
 }
 
 /* latin */
@@ -56,11 +59,10 @@ header {
   grid-column-gap: 20px;
   background-color: #16214f;
   /*Absolute will set position relative to containing element (if none, document body)*/
-  /*border: 2px solid #FFFFFF;*/
   position: relative;
-  height: auto;
-  width: 80%;
-  top: 3%;
+  height: 37vw;
+  width: 80vw;
+  top: 2vw;
   /*transform: translate(-50%, 20%);*/
 }
 
@@ -68,53 +70,47 @@ header {
   border: 1px solid #000000;
   background-color: #1520ed;
   color: #ffffff;
-  font-size: 30px;
+  font-size: 1.5vw;
   text-align: center;
-}
-
-.box-margin{
-  border: 1px solid #000000;
-  background-color: #1520ed;
-  color: #ffffff;
-  font-size: 30px;
-  text-align: center;
+  /*line-height: 0.1vw;*/
+  font-family: 'Aldrich';
+  padding: 1vw 0 0 0;
 }
 
 .ships-boxes{
+  float: right;
   display: flex;
   flex-wrap: wrap;
   position: relative;
   background-color: #adadad;
-  height: 20%;
-  width: 37%;
-  /*top right down left*/
-  margin-top: 1%;
-  float: right;
+  height: 11vw;
+  width: 37vw;
+  margin-top: 0.5vw;
 }
 
 #ships-box1{
-  margin-right: 2.5%;
+  margin-right: 3vw;
 }
 
 #ships-box2{
-  margin-right: 4%;
+  margin-right: 3.5vw;
 }
 
-.ships-box {
-  height: 42%;
-  width: 31%;
-  margin: 1%;
+.ships-box-inner {
+  height: 4.8vw;
+  width: 11.5vw;
+  margin: 0.38vw;
   background-color: #ffffff;
 }
 
 .log {
-  padding: 1%;
+  padding: 1vw;
   float: right;
   position: relative;
-  height: 30%;
-  width: 15.5%;
-  right: 1%;
-  top: -13%;
+  height: 19vw;
+  width: 15.5vw;
+  right: 0.9vw;
+  bottom: 10vw;
   background-color: #fcfcc7;
   text-align: center;
   font-family: "Aldrich";
