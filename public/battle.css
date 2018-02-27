@@ -130,6 +130,8 @@ header {
   background-color: #ededed;
   float: left;
   position: relative;
+  /*top right down left*/
+  padding: 0.3vw 0.3vw 0.1vw 0.3vw;
   height: 19vw;
   width: 15vw;
   left: 2.7vw;
