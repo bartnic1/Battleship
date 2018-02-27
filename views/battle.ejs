@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" href="../public/battle.css">
-    <script src="battleJquery.js"></script>
+    <link rel="stylesheet" href="battle.css">
+    <script src="/scripts/jquery-3.2.1.js"></script>
+    <script src="/scripts/main.js"></script>
   </head>
   <body>
     <header>
@@ -29,6 +30,17 @@
         <div class="box" id=<%=i-1%><%=z[j-2]%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
         <%}}%>
       </div>
- </div>
+    </div>
+    <!-- This allocates an area for ship images (which ships are operational and which aren't) -->
+    <div id="ships-box1" class="ships-boxes">
+      <%for(let i = 0; i < 5; i++){%>
+        <div class=ships-box></div>
+      <%}%>
+    </div>
+    <div id="ships-box2" class="ships-boxes">
+      <%for(let i = 0; i < 5; i++){%>
+        <div class=ships-box></div>
+      <%}%>
+    </div>
   </body>
 </html>

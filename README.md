@@ -18,10 +18,10 @@ Splash Page:
 
 Placement Board:
 - Should show two boards: Player board, initially empty
-			  Opponent board, initially empty
+			                    Opponent board, initially empty
 - Show ships available for placement along bottom of screen
-- Can drag and drop or define placement by clicking on grids
-- Some tool to decide who goes first
+- Can drag and drop or define placement by clicking on grid
+- Some mechanism to decide who goes first
 - Start game button once ships placed (links to Main Board)
 --> Will log to screen that one must place all ships before user can start
 --> Can include back to main menu button
@@ -44,7 +44,7 @@ Leaderboard:
 - Links back to main menu
 =============================================
 
-Qs: 
+Qs:
 Is it okay to use ejs to create our web page?
 YES
 

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node battleserver.js"
+    "start": "node ./public/scripts/server.js"
   },
   "repository": {
     "type": "git",

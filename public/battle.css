@@ -1,4 +1,9 @@
+/* Width: 90%, margin: auto
+will auto-center */
+
+
 html, body {
+  position: relative;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -7,6 +12,10 @@ html, body {
 
 body {
   background-color: #16214f;
+}
+
+header {
+  margin-top: 15px;
 }
 
 /* latin */
@@ -23,7 +32,6 @@ body {
   margin: 0;
   color: #859ec6;
   font-family: 'Aldrich';
-
 }
 
 .board1{
@@ -49,12 +57,11 @@ body {
   background-color: #16214f;
   /*Absolute will set position relative to containing element (if none, document body)*/
   /*border: 2px solid #FFFFFF;*/
-  position: absolute;
-  height: auto;
+  position: relative;
+  height: 60%;
   width: 70%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 5%;
+  left: 25%;
 }
 
 .box{
@@ -71,4 +78,31 @@ body {
   color: #ffffff;
   font-size: 30px;
   text-align: center;
+}
+
+.ships-boxes{
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  background-color: #adadad;
+  height: 17%;
+  width: 33%;
+  /*top right down left*/
+  margin-top: 3%;
+  float: right;
+}
+
+#ships-box1{
+  margin-right: 6.5%;
+}
+
+#ships-box2{
+  margin-right: 4%;
+}
+
+.ships-box {
+  height: 42%;
+  width: 31%;
+  margin: 1%;
+  background-color: #ffffff;
 }
