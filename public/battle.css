@@ -30,7 +30,6 @@ header {
 
 .title{
   text-align: center;
-  /*padding-top: 1vw;*/
   margin: 0;
   color: #859ec6;
   font-family: 'Aldrich';
@@ -41,7 +40,7 @@ header {
   position: relative;
   top: 1vw;
   width: 48vw;
-  left: 17vw;
+  left: 18vw;
   flex-direction: row;
   justify-content: space-between;
   height: 1.7vw;

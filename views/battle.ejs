@@ -14,12 +14,13 @@
       <div class="notifications-body">
         <ul class="notifications-list">
           <li>Welcome to Battleship! </li>
-          <li>Outline "ship" placement on board. Press enter when finished</li>
-          <li>Aircraft Carrier: 5</li>
+          <li>Select a ship below the player grid, then select (click) on grid squares to outline ship placement. When finished, press enter.</li>
+
+          <!-- <li>Aircraft Carrier: 5</li>
           <li>Battleship: 4</li>
           <li>Cruiser: 3</li>
           <li>Submarine: 3</li>
-          <li>Destroyer: 2</li>
+          <li>Destroyer: 2</li> -->
         </ul>
       </div>
     </div>
@@ -36,7 +37,7 @@
           <div class="box" style="grid-area: <%=1%>/<%=i%>/<%=2%>/<%=i+1%>"><%=z[i-2]%></div>
           <div class="box" style="grid-area: <%=i%>/<%=1%>/<%=i+1%>/<%=2%>"><%=i-1%></div>
         <%for(let j = 2; j <= 11; j++){%>
-          <div class="box" id=<%=i-1%><%=z[j-2]%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
+          <div class="box" id=<%=i-1%><%=j-1%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
         <%}};%>
       </div>
       <div class="board2">
@@ -45,20 +46,20 @@
         <div class="box" style="grid-area: <%=i%>/<%=1%>/<%=i+1%>/<%=2%>"><%=i-1%></div>
         <div class="box" style="grid-area: <%=1%>/<%=i%>/<%=2%>/<%=i+1%>"><%=z[i-2]%></div>
         <%for(let j = 2; j <= 11; j++){%>
-        <div class="box" id=<%=i-1%><%=z[j-2]%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
+        <div class="box" id=<%=i-1%><%=j-1%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
         <%}}%>
       </div>
     </div>
 
     <!-- This allocates an area for ship images (which ships are operational and which aren't) -->
     <div id="ships-box-opponent" class="ships-boxes">
-      <%for(let i = 0; i < 5; i++){%>
-        <div id="opponent-<%=i%>" class=ships-box-inner></div>
+      <%for(let i = 5; i < 10; i++){%>
+        <div id="<%=i%>" class=ships-box-inner></div>
       <%}%>
     </div>
     <div id="ships-box-player" class="ships-boxes">
       <%for(let i = 0; i < 5; i++){%>
-        <div id="player-<%=i%>" class=ships-box-inner></div>
+        <div id="<%=i%>" class=ships-box-inner></div>
       <%}%>
     </div>
     <!-- The log takes note of if ships have been hit or sunk over the course of the game -->

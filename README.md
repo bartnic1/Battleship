@@ -29,7 +29,7 @@ Placement Board:
       - When enter is pressed, check the following: X squares are depressed (i.e. battleship = 4), and all 4 squares are either in the same column or the same row
       - If both are true, then, create an object with a key (battleship) and value (array of positions).
       - If one or both are false, then log "Incorrect placement" and reset to the initial condition.
-  - Every square selected should be added to an array
+
 
 
 - Can drag and drop or define placement by clicking on grid
