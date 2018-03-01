@@ -19,7 +19,19 @@ Splash Page:
 Placement Board:
 - Should show two boards: Player board, initially empty
 			                    Opponent board, initially empty
+
 - Show ships available for placement along bottom of screen
+- In notifications panel, will state: Click ships at the bottom of your board, and define their placement by selecting an appropriately sized grid on your board (click the mouse on the board).
+
+--> Client-side: Use jquery.
+  - Create buttons to be selected
+  - Once selected, print to notifications panel: Outline "ship" placement on board. Press enter when finished.
+      - When enter is pressed, check the following: X squares are depressed (i.e. battleship = 4), and all 4 squares are either in the same column or the same row
+      - If both are true, then, create an object with a key (battleship) and value (array of positions).
+      - If one or both are false, then log "Incorrect placement" and reset to the initial condition.
+  - Every square selected should be added to an array
+
+
 - Can drag and drop or define placement by clicking on grid
 - Some mechanism to decide who goes first
 - Start game button once ships placed (links to Main Board)

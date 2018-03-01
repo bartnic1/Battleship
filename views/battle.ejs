@@ -10,12 +10,26 @@
       <h1 class="title">Battleship Simulator</h1>
     </header>
     <!-- Important notifications: Turn, placement of ships -->
-    <div class="notifications">
-      <p style="background-color: grey; margin: 0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ac tellus quam. Sed mollis, odio et pharetra scelerisque, est nulla aliquet ipsum, eget elementum mauris mauris ut tellus. Ut et tincidunt lacus. Sed tellus enim, auctor ac ultricies ut, posuere nec ante. Nam pellentesque id elit quis tristique. Donec sagittis eget turpis sed commodo. Phasellus ut ligula ut augue vestibulum faucibus.</p>
+    <div class="notifications-outer"> Notifications
+      <div class="notifications-body">
+        <ul class="notifications-list">
+          <li>Welcome to Battleship! </li>
+          <li>Outline "ship" placement on board. Press enter when finished</li>
+          <li>Aircraft Carrier: 5</li>
+          <li>Battleship: 4</li>
+          <li>Cruiser: 3</li>
+          <li>Submarine: 3</li>
+          <li>Destroyer: 2</li>
+        </ul>
+      </div>
+    </div>
+    <div class="player-titles">
+      <div class="players">Player</div>
+      <div class="players">Opponent</div>
     </div>
     <div class="playspace">
-       <!-- Form of grid-area: N/W/S/E. Need at least a difference of 1. -->
-       <div class="board1">
+      <!-- Form of grid-area: N/W/S/E. Need at least a difference of 1. -->
+      <div class="board1">
         <%const z = gridBoundary.letters%>
         <div class="box" style="grid-area: 1/1/1/1"></div>
         <%for(let i = 2; i <= 11; i++){%>
@@ -37,19 +51,19 @@
     </div>
 
     <!-- This allocates an area for ship images (which ships are operational and which aren't) -->
-    <div id="ships-box1" class="ships-boxes">
+    <div id="ships-box-opponent" class="ships-boxes">
       <%for(let i = 0; i < 5; i++){%>
-        <div class=ships-box-inner></div>
+        <div id="opponent-<%=i%>" class=ships-box-inner></div>
       <%}%>
     </div>
-    <div id="ships-box2" class="ships-boxes">
+    <div id="ships-box-player" class="ships-boxes">
       <%for(let i = 0; i < 5; i++){%>
-        <div class=ships-box-inner></div>
+        <div id="player-<%=i%>" class=ships-box-inner></div>
       <%}%>
     </div>
     <!-- The log takes note of if ships have been hit or sunk over the course of the game -->
-    <div class="log-boundary">Battle Log
-      <div class="log">
+    <div class="log-outer">Battle Log
+      <div class="log-body">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ac tellus quam. Sed mollis, odio et pharetra scelerisque, est nulla aliquet ipsum, eget elementum mauris mauris ut tellus. Ut et tincidunt lacus. Sed tellus enim, auctor ac ultricies ut, posuere nec ante. Nam pellentesque id elit quis tristique. Donec sagittis eget turpis sed commodo. Phasellus ut ligula ut augue vestibulum faucibus.
 
         Nam eros eros, finibus vitae lectus vitae, sodales posuere nulla. Nunc ac auctor quam. Nulla facilisi. Donec in congue augue, sit amet aliquam arcu. Donec nec facilisis mi, ut sagittis mi. In hac habitasse platea dictumst. Suspendisse vitae viverra mauris, nec placerat tortor. Aliquam tincidunt scelerisque dictum. Cras justo erat, finibus et sagittis a, dictum ut leo. Morbi rutrum finibus leo, commodo eleifend purus convallis eu. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
