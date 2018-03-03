@@ -23,6 +23,11 @@ app.get("/", (req, res) => {
   res.render("intro");
 });
 
+app.post("/battle", (req, res) => {
+  console.log("request", req.body);
+  res.send(req.body);
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });

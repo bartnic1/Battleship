@@ -210,4 +210,10 @@ $(document).ready(function(){
       $('.new-game').css("visibility", "visible");
     }
   });
+
+  $('.new-game').on('click', function(event){
+    $.post("/battle", finalShipLocations).done(function(res){
+      console.log("response", res);
+    });
+  });
 });
