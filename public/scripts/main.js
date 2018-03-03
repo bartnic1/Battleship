@@ -175,20 +175,14 @@ $(document).ready(function(){
 
   });
 
-  // TO DO UPDATED : Once data is successfully entered, you have to make it impossible to select the same ship again.
-  // Also, you need to make sure users don't overlap ships (probably want to keep the red stuff).
-
-  //Idea: Its actually easier to let the user enter data again. Once they hit enter, deselect their current ship, add data to storage.
-
   $('body').on('keypress', function(event){
-    if(playerBoardSelectable && event.originalEvent.code === 'Enter'){
+    if(playerBoardSelectable && event.originalEvent.code === 'Space'){
       //Test if ship has correct dimensions
       if(tempShipLocArray.length === shipIDLength[shipNumber][1] && shapeValid(tempShipLocArray, shipIDLength[shipNumber][1])){
         //If ship has correct length, keep track of these permanent coordinates
         finalShipLocations[shipIDLength[shipNumber][0]] = tempShipLocArray;
-        for(val of tempShipLocArray){
-          allShipCoordinates.push(val);
-        }
+        allShipCoordinates.concat(tempShipLocArray);
+
         initSelector(shipNumber);
         //Remove notifications
         $('.ship-selection').empty();
