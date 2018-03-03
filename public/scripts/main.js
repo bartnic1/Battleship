@@ -1,12 +1,9 @@
 // debugger; //<--allows you to stop execution in browser at this point, and look at event
 
-//This works: even.target.id returns "11" (if you want to go back, in html doc use z[j-2])
-// if(event.target.id === "11"){
-//   alert('hello');
-// }
-
 let playerBoardSelectable = false;
 let shipSelectedData = [[false, false, false, false, false], [0, 0, 0, 0, 0]];
+// 0: Carrier(5), 1:Battleship(4), 2:Cruiser(3), 3:Submarine(3), 4:Destroyer(2)
+let shipLengths = [["Carrier", 5], ["Battleship", 4], ["Cruiser", 3], ["Submarine", 3], ["Destroyer", 2]];
 let shipNumber;
 let tempShipLocArray = [];
 let shipLocObject = {};
@@ -39,8 +36,50 @@ function initSelector(shipNumber, shipID){
   }
 }
 
-// $('.notifications-list').empty();
-// $('<li>Hello World</li>').appendTo($('.notifications-list'));
+//locArray is passed in as an array of strings: ["11", "34", "85", ...]
+function shapeValid(locArray, shipLength){
+  function checkFirstShape(coordValsA, coordValsB){
+    let coordValsAligned = true;
+    let min = 11;
+    let max = 0;
+    //Check if xvals are aligned, or yvals are aligned
+    for(let index = 1; index < locArray.length; index++){
+      if(coordValsA[0] !== coordValsA[index]){
+        coordValsAligned = false;
+      }
+    }
+    //If so, get the max difference between yvals and xvals (respective to above)
+    if(coordValsAligned){
+      for(let val of coordValsB){
+        if(val < min){
+          min = val;
+        }
+        if(val > max){
+          max = val;
+        }
+      }
+      return max - min + 1;
+    }
+    return 0;
+  }
+  let xVals = [];
+  let yVals = [];
+  for(let coordinate of locArray){
+    xVals.push(Number(coordinate[0]));
+    yVals.push(Number(coordinate[1]));
+  }
+  let xLength = checkFirstShape(xVals, yVals);
+  let yLength = checkFirstShape(yVals, xVals);
+  if(xLength === shipLength || yLength === shipLength){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+function resetBoard(){
+
+}
 
 $(document).ready(function(){
 
@@ -61,31 +100,57 @@ $(document).ready(function(){
 
   // 0: Carrier(5), 1:Battleship(4), 2:Cruiser(3), 3:Submarine(3), 4:Destroyer(2)
   $('#ships-box-player').on('click', function(event){
-    let shipNumber = Number(event.target.id);
+    shipNumber = Number(event.target.id);
     let shipID = `#${shipNumber}`;
-    //Add message to notifications...
-    switch(shipNumber){
 
-    }
+    //Add message to notifications panel
+    let message;
+    let shipNotifier = $('.ship-selection');
     initSelector(shipNumber, shipID);
-  });
-
-  $('body').on('keypress', function(event){
-    if(playerBoardSelectable && event.originalEvent.code === 'Enter'){
+    if(playerBoardSelectable){
       switch(shipNumber){
       case 0:
-        if(tempShipLocArray.length === 5 && maxDiff(tempShipLocArray) === 5){
-          shipLocObject[shipNumber] = tempShipLocArray;
-          resetBoard();
-          tempShipLocArray = [];
-        }else{
-          $('<li>').text("Try again!").appendTo();
-        }
+        message = "Carrier: 5 linear spaces";
+        shipNotifier.empty();
+        $(`<li>${message}</li>`).appendTo(shipNotifier);
+        break;
+      case 1:
+        message = "Battleship: 4 linear spaces";
+        shipNotifier.empty();
+        $(`<li>${message}</li>`).appendTo(shipNotifier);
+        break;
+      case 2:
+        message = "Cruiser: 3 linear spaces";
+        shipNotifier.empty();
+        $(`<li>${message}</li>`).appendTo(shipNotifier);
+        break;
+      case 3:
+        message = "Submarine: 3 linear spaces";
+        shipNotifier.empty();
+        $(`<li>${message}</li>`).appendTo(shipNotifier);
+        break;
+      case 4:
+        message = "Destroyer: 2 linear spaces";
+        shipNotifier.empty();
+        $(`<li>${message}</li>`).appendTo(shipNotifier);
         break;
       default:
         break;
       }
+    }else{
+      shipNotifier.empty();
     }
+
   });
 
+  $('body').on('keypress', function(event){
+    if(playerBoardSelectable && event.originalEvent.code === 'Enter'){
+      if(tempShipLocArray.length === shipLengths[shipNumber][1] && shapeValid(tempShipLocArray, shipLengths[shipNumber][1])){
+        shipLocObject[shipLengths[shipNumber][0]] = tempShipLocArray;
+        console.log("It works!");
+      }else{
+        resetBoard();
+      }
+    }
+  });
 });
