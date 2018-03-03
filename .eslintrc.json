@@ -1,5 +1,5 @@
 {
-    "extends": "eslint-config-lighthouselabs",
+    "extends": "./node_modules/eslint-config-lighthouselabs/index.js",
     "parserOptions": {
         "sourceType": "module"
     }

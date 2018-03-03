@@ -199,3 +199,11 @@ header {
   font-size: 1.1vw;
 }
 
+.new-game{
+  position: absolute;
+  visibility: hidden;
+  width: 7vw;
+  height: 3vw;
+  left: 6vw;
+  top: 1vw;
+}

@@ -22,6 +22,8 @@ function sum(array){
 
 function initSelector(shipNumber){
   $('.ship-error').empty();
+  $('.ships-placed').empty();
+  $('.new-game').css("visibility", "hidden");
   let shipID = `#${shipNumber}`;
   shipSelectedData[0][shipNumber] = !shipSelectedData[0][shipNumber];
   if(shipSelectedData[0][shipNumber]){
@@ -91,6 +93,20 @@ function resetBoard(locArray){
 
 function getColour(targetID){
   return $(`#${targetID}`).css("background-color");
+}
+
+function checkIfDone(){
+  let allShipCoordValues = Object.values(finalShipLocations);
+  if(allShipCoordValues.length === 5){
+    for(coordinateArray of allShipCoordValues){
+      if (coordinateArray.length === 0){
+        return false;
+      }
+    }
+  }else{
+    return false;
+  }
+  return true;
 }
 
 $(document).ready(function(){
@@ -187,6 +203,11 @@ $(document).ready(function(){
       }
       //Reset the temp location array for another ship
       tempShipLocArray = [];
+    }
+    //When all ships placed, create start game button
+    if(checkIfDone()){
+      $(`<li>All ships placed. Press new game above to begin!</li>`).appendTo($('.ships-placed'));
+      $('.new-game').css("visibility", "visible");
     }
   });
 });
