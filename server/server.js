@@ -1,13 +1,15 @@
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 8080; // default port 8080
+// http://localhost:8080
+const PORT = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
+//Add ?_method=DELETE to the end of your normal path, also use POST
+const methodOverride = require('method-override');
 const path = require("path");
 
-// http://localhost:8080
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname,"public")));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 const gridSettings = {
   gridBoundary: {letters: 'ABCDEFGHIJ'}
@@ -19,7 +21,7 @@ app.get("/battle", (req, res) => {
 
 app.get("/", (req, res) => {
   res.render("intro");
-})
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
