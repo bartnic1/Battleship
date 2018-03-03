@@ -21,6 +21,7 @@ function sum(array){
 }
 
 function initSelector(shipNumber){
+  $('.ship-error').empty();
   let shipID = `#${shipNumber}`;
   shipSelectedData[0][shipNumber] = !shipSelectedData[0][shipNumber];
   if(shipSelectedData[0][shipNumber]){
@@ -88,17 +89,23 @@ function resetBoard(locArray){
   }
 }
 
+function getColour(targetID){
+  return $(`#${targetID}`).css("background-color");
+}
+
 $(document).ready(function(){
 
   //This event handler is used determine which parts of the board can be selected on setup
   $('.board1').on('click', function(event){
+
     let targetID = event.target.id;
     if(playerBoardSelectable){
-      if($(`#${targetID}`).css("background-color") !== "red"){
+      if(getColour(targetID) === "rgb(21, 32, 237)"){
         $(`#${targetID}`).css("background-color", "red");
         tempShipLocArray.push(targetID);
       }
     }
+    console.log(tempShipLocArray);
   });
 
   // 0: Carrier(5), 1:Battleship(4), 2:Cruiser(3), 3:Submarine(3), 4:Destroyer(2)
@@ -159,25 +166,21 @@ $(document).ready(function(){
 
   $('body').on('keypress', function(event){
     if(playerBoardSelectable && event.originalEvent.code === 'Enter'){
-      errorNode = $('.ship-error');
-
       //Test if ship has correct dimensions
       if(tempShipLocArray.length === shipIDLength[shipNumber][1] && shapeValid(tempShipLocArray, shipIDLength[shipNumber][1])){
-
         //If ship has correct length, keep track of these permanent coordinates
         finalShipLocations[shipIDLength[shipNumber][0]] = tempShipLocArray;
         for(val of tempShipLocArray){
           allShipCoordinates.push(val);
         }
         initSelector(shipNumber);
-
         //Remove notifications
         $('.ship-selection').empty();
-        errorNode.empty();
         console.log(finalShipLocations);
 
       //Notify player of incorrect placement, and reset board
       }else{
+        let errorNode = $('.ship-error');
         errorNode.empty();
         $(`<li>Incorrect shape entered. Try again!</li>`).appendTo(errorNode);
         resetBoard(tempShipLocArray);
