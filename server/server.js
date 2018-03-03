@@ -111,7 +111,9 @@ function generateShips(ships){
         }
       }
     }
-    allShipLocs.concat(points);
+    for (coordinate of points){
+      allShipLocs.push(coordinate);
+    }
     computerShips[ship] = points;
   }
   return computerShips;
@@ -119,6 +121,7 @@ function generateShips(ships){
 
 app.post("/battle", (req, res) => {
   let compShips = generateShips(req.body);
+  console.log(compShips);
   res.send(compShips);
 });
 

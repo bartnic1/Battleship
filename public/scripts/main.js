@@ -7,7 +7,6 @@ let shipIDLength = [["Carrier", 5], ["Battleship", 4], ["Cruiser", 3], ["Submari
 let shipNumber;
 // Used in setting up the board
 let tempShipLocArray = [];
-let allShipCoordinates = [];
 
 // Holds final ship locations
 let finalShipLocations = {};
@@ -121,7 +120,6 @@ $(document).ready(function(){
         tempShipLocArray.push(targetID);
       }
     }
-    console.log(tempShipLocArray);
   });
 
   // 0: Carrier(5), 1:Battleship(4), 2:Cruiser(3), 3:Submarine(3), 4:Destroyer(2)
@@ -181,12 +179,9 @@ $(document).ready(function(){
       if(tempShipLocArray.length === shipIDLength[shipNumber][1] && shapeValid(tempShipLocArray, shipIDLength[shipNumber][1])){
         //If ship has correct length, keep track of these permanent coordinates
         finalShipLocations[shipIDLength[shipNumber][0]] = tempShipLocArray;
-        allShipCoordinates.concat(tempShipLocArray);
-
         initSelector(shipNumber);
         //Remove notifications
         $('.ship-selection').empty();
-        console.log(finalShipLocations);
 
       //Notify player of incorrect placement, and reset board
       }else{
@@ -207,7 +202,14 @@ $(document).ready(function(){
 
   $('.new-game').on('click', function(event){
     $.post("/battle", finalShipLocations).done(function(res){
-      console.log("response", res);
+      for (let row of Object.values(res)){
+        for (let coordinate of row){
+          $(`#o${coordinate[0]}${coordinate[1]}`).css("background-color", "red");
+        }
+      }
+      // console.log("new object", Object.values(res));
+      // console.log("first row", Object.values(res)[0]);
+      // console.log("first entry, first row", Object.values(res)[0][0]);
     });
   });
 });
