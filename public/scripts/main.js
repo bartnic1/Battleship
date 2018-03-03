@@ -3,10 +3,14 @@
 let playerBoardSelectable = false;
 let shipSelectedData = [[false, false, false, false, false], [0, 0, 0, 0, 0]];
 // 0: Carrier(5), 1:Battleship(4), 2:Cruiser(3), 3:Submarine(3), 4:Destroyer(2)
-let shipLengths = [["Carrier", 5], ["Battleship", 4], ["Cruiser", 3], ["Submarine", 3], ["Destroyer", 2]];
+let shipIDLength = [["Carrier", 5], ["Battleship", 4], ["Cruiser", 3], ["Submarine", 3], ["Destroyer", 2]];
 let shipNumber;
+// Used in setting up the board
 let tempShipLocArray = [];
-let shipLocObject = {};
+let allShipCoordinates = [];
+
+// Holds final ship locations
+let finalShipLocations = {};
 
 function sum(array){
   let sum = 0;
@@ -16,7 +20,8 @@ function sum(array){
   return sum;
 }
 
-function initSelector(shipNumber, shipID){
+function initSelector(shipNumber){
+  let shipID = `#${shipNumber}`;
   shipSelectedData[0][shipNumber] = !shipSelectedData[0][shipNumber];
   if(shipSelectedData[0][shipNumber]){
     shipSelectedData[1][shipNumber] = 1;
@@ -28,7 +33,7 @@ function initSelector(shipNumber, shipID){
     shipSelectedData[1][shipNumber] = 0;
   }
   if(shipSelectedData[1][shipNumber] === 1){
-    $(shipID).css("opacity", "0.7");
+    $(shipID).css("opacity", "0.5");
     playerBoardSelectable = true;
   }else{
     $(shipID).css("opacity", "1.0");
@@ -77,36 +82,40 @@ function shapeValid(locArray, shipLength){
   }
 }
 
-function resetBoard(){
-
+function resetBoard(locArray){
+  for(loc of locArray){
+    $(`#${loc}`).css("background-color", '#1520ed');
+  }
 }
 
 $(document).ready(function(){
 
+  //This event handler is used determine which parts of the board can be selected on setup
   $('.board1').on('click', function(event){
     let targetID = event.target.id;
     if(playerBoardSelectable){
-      $(`#${targetID}`).css("background-color", "red");
-      tempShipLocArray.push(targetID);
+      if($(`#${targetID}`).css("background-color") !== "red"){
+        $(`#${targetID}`).css("background-color", "red");
+        tempShipLocArray.push(targetID);
+      }
     }
   });
 
-  // TO DO : add message to notifications when user clicks on specific ship.
-  // Below, when enter is pressed, check whether everything is okay, then log correct message
-  // make sure to define maxDiff and resetboard!
-
-  // Once data is successfully entered, you have to make it impossible to select the same ship again.
-  // Also, you need to make sure users don't overlap ships (probably want to keep the red stuff).
-
   // 0: Carrier(5), 1:Battleship(4), 2:Cruiser(3), 3:Submarine(3), 4:Destroyer(2)
+
   $('#ships-box-player').on('click', function(event){
     shipNumber = Number(event.target.id);
-    let shipID = `#${shipNumber}`;
-
     //Add message to notifications panel
     let message;
     let shipNotifier = $('.ship-selection');
-    initSelector(shipNumber, shipID);
+    initSelector(shipNumber);
+    let finalShipEntry = finalShipLocations[shipIDLength[shipNumber][0]];
+    if(finalShipEntry !== undefined){
+      if(finalShipEntry.length !== 0){
+        resetBoard(finalShipEntry);
+        finalShipLocations[shipIDLength[shipNumber][0]] = [];
+      }
+    }
     if(playerBoardSelectable){
       switch(shipNumber){
       case 0:
@@ -143,14 +152,38 @@ $(document).ready(function(){
 
   });
 
+  // TO DO UPDATED : Once data is successfully entered, you have to make it impossible to select the same ship again.
+  // Also, you need to make sure users don't overlap ships (probably want to keep the red stuff).
+
+  //Idea: Its actually easier to let the user enter data again. Once they hit enter, deselect their current ship, add data to storage.
+
   $('body').on('keypress', function(event){
     if(playerBoardSelectable && event.originalEvent.code === 'Enter'){
-      if(tempShipLocArray.length === shipLengths[shipNumber][1] && shapeValid(tempShipLocArray, shipLengths[shipNumber][1])){
-        shipLocObject[shipLengths[shipNumber][0]] = tempShipLocArray;
-        console.log("It works!");
+      errorNode = $('.ship-error');
+
+      //Test if ship has correct dimensions
+      if(tempShipLocArray.length === shipIDLength[shipNumber][1] && shapeValid(tempShipLocArray, shipIDLength[shipNumber][1])){
+
+        //If ship has correct length, keep track of these permanent coordinates
+        finalShipLocations[shipIDLength[shipNumber][0]] = tempShipLocArray;
+        for(val of tempShipLocArray){
+          allShipCoordinates.push(val);
+        }
+        initSelector(shipNumber);
+
+        //Remove notifications
+        $('.ship-selection').empty();
+        errorNode.empty();
+        console.log(finalShipLocations);
+
+      //Notify player of incorrect placement, and reset board
       }else{
-        resetBoard();
+        errorNode.empty();
+        $(`<li>Incorrect shape entered. Try again!</li>`).appendTo(errorNode);
+        resetBoard(tempShipLocArray);
       }
+      //Reset the temp location array for another ship
+      tempShipLocArray = [];
     }
   });
 });
