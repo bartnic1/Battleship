@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./public/scripts/server.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,9 @@
     "body-parser": "^1.18.2",
     "ejs": "^2.5.7",
     "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.18.2",
+    "eslint-config-lighthouselabs": "github:lighthouse-labs/eslint-config-lighthouselabs"
   }
 }

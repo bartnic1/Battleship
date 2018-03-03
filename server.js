@@ -7,7 +7,7 @@ const path = require("path");
 // http://localhost:8080
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname,"../../public")));
+app.use(express.static(path.join(__dirname,"public")));
 
 const gridSettings = {
   gridBoundary: {letters: 'ABCDEFGHIJ'}
