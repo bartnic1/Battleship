@@ -99,6 +99,12 @@ module.exports = {
       }
     }
     return newShotCoordinates;
+  },
+
+  convertToCoord: function(incomingShot){
+    let shotStr = incomingShot.target.slice(1);
+    let newCoord = [shotStr[0], shotStr[1]];
+    return newCoord;
   }
 
 };

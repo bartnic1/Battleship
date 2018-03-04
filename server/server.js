@@ -1,20 +1,11 @@
 //List of things to do:
 
-// 1. Get rid of repeating random int function in serverfunctions
-
 // 2. Stretch: Get images of ships, evenly divided, loaded onto the board when playing;
 // will also need to work out how they will look when damaged - it seems to override background-color.
 
-// 3. Add side-images of ships to computer or opponent's tray.
-
-// 4. Get basic gameplay working!!!!! (priority - see gameplay event handlers)
-
-// Cases: Its yellow, want to untarget. Its black or white: Can't target. Its blue, want to target.
-// Won't need to worry about ships since you won't be able to see them (and even then background-color
-// should still exist).
-
-// Idea: You could add in an html character, or some font-awesome character, which takes on the yellow/red
-// /black/white values, and then continue to use a background image.
+// New idea: After placement is done, rearrange (sort) your array from lowest to highest.
+// Set the appropriate background-image, using the sorted order.
+// If going vertically, need to use new set of rotated images.
 
 const express = require("express");
 const app = express();
@@ -36,7 +27,15 @@ const gridSettings = {
   gridBoundary: {letters: 'ABCDEFGHIJ'}
 };
 
+let serverResponseTime = 3000;
+
+//Shots taken by computer
 let shotsTaken = [];
+//computer-generated ships object
+let compShips;
+//Number of hits
+let maxHits = 17;
+let serverShipsHit = 0;
 
 //Imported server functions
 const serverFunctions = require("./serverFunctions.js");
@@ -49,17 +48,37 @@ app.get("/", (req, res) => {
   res.render("intro");
 });
 
+//This generates a board of ships for the computer, as an object:
+//{"Carrier": [[1,2],[1,3],[1,4],[1,5],[1,6]], "Battleship": ...}
 app.post("/battle", (req, res) => {
-  let compShips = serverFunctions.generateShips(req.body);
+  compShips = serverFunctions.generateShips(req.body);
   res.send(compShips);
 });
 
-app.put("/battle/takeShot", (req, res) => {
+//This logs a shot taken by the user, increments a server-side counter, and tells the user
+//if it was a hit or a miss.
+app.put("/battle/placeShot", (req, res) => {
+  let placedShot = serverFunctions.convertToCoord(req.body);
+  for(let ship in compShips){
+    for(let coord of compShips[ship]){
+      if(placedShot[0] === coord[0] && placedShot[1] === coord[1]){
+        serverShipsHit++;
+        if(serverShipsHit >= maxHits){
+          return res.send("playerWins");
+        }else{
+          return res.send("hit");
+        }
+      }
+    }
+  }
+  return res.send("miss");
+});
+
+app.get("/battle/getShot", (req, res) => {
   let newShot = serverFunctions.randomShot(shotsTaken);
   shotsTaken.push(newShot);
-  console.log(shotsTaken);
-  // res.send(newShot);
-  setTimeout(res.send(newShot), 3000);
+  //Simulate server "thinking"
+  setTimeout(function(){ return res.send(newShot); }, serverResponseTime);
 });
 
 //Logs to console if server is running

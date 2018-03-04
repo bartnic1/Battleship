@@ -4,7 +4,6 @@
 //Global variables and booleans                         //
 //------------------------------------------------------//
 //Startup variables
-let gameHasStarted = false;
 let gameIsSettingUp = true;
 let playerBoardSelectable = false;
 let shipSelectedData = [[false, false, false, false, false], [0, 0, 0, 0, 0]];
@@ -20,7 +19,6 @@ let prevTarget;
 
 let playerTurn = false;
 let playerShipsHit = 0;
-let opponentShipsHit = 0;
 //------------------------------------------------------//
 //Functions used by event handlers                      //
 //------------------------------------------------------//
@@ -127,6 +125,14 @@ function getRandomInt(max){
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+function getID(coordinate){
+  return `#${coordinate[0]}${coordinate[1]}`;
+}
+
+//------------------------------------------------------//
+//Functions used in gameplay                            //
+//------------------------------------------------------//
+
 //Multiple css properties added for cross-browser support
 function setGlowFirst(player1, player2){
   player1.css("-webkit-animation", "neon3 1.5s ease-in-out infinite alternate");
@@ -144,33 +150,37 @@ function enemyTurnAction(){
       for (let coordinate of finalShipLocations[shiptype]){
         if(Number(coordinate[0]) === res[0] && Number(coordinate[1]) === res[1]){
           playerShipsHit++;
-          $(`#${res[0]}${res[1]}`).css("background-color", "black");
-          setGlowFirst($('#player'), $('#opponent'));
-          playerTurn = true;
+          $(getID(res)).css("background-color", "black");
           return;
         }
       }
     }
-    $(`#${res[0]}${res[1]}`).css("background-color", "white");
-    setGlowFirst($('#player'), $('#opponent'));
-    playerTurn = true;
+    $(getID(res)).css("background-color", "white");
   }
   playerTurn = false;
   setGlowFirst($('#opponent'), $('#player'));
-  $.post("/battle/takeShot?_method=PUT").done(function(res){
-    setTimeout(checkShot(res), 2000);
+  $.get("/battle/getShot", function(res) {
+    checkShot(res);
+    setGlowFirst($('#player'), $('#opponent'));
+    playerTurn = true;
   });
 }
 
 function playerTurnAction(fireTarget){
-  console.log("firetarget: ", fireTarget);
+  $.post("/battle/placeShot?_method=PUT", {target: fireTarget}).done(function(res){
+    if(res === "hit"){
+      $(`#${fireTarget}`).css("background-color", "black");
+    }else if(res === "miss"){
+      $(`#${fireTarget}`).css("background-color", "white");
+    }else if(res === "playerWins"){
+      $('.intro').empty();
+      $('<li>Congratulations, you win!</li>').appendTo('.intro');
+    }
+  });
   enemyTurnAction();
-  return;
 }
 
-function getID(coordinate){
-  return `#${coordinate[0]}${coordinate[1]}`;
-}
+
 
 //To be implemented upon completion of core tasks
 function loadShipsOnBoard(playerShips){
@@ -183,6 +193,11 @@ function loadShipsOnTray(){
   $('#2').css("background-image", 'url("../images/cruiserNagato1944.png")');
   $('#3').css("background-image", 'url("../images/Typhoon_class_SSBN.png")');
   $('#4').css("background-image", 'url("../images/ZumwaltClassDestroyer.png")');
+  $('#5').css("background-image", 'url("../images/carrierShokaku1942.png")');
+  $('#6').css("background-image", 'url("../images/battleshipKongo1944.png")');
+  $('#7').css("background-image", 'url("../images/cruiserNagato1944.png")');
+  $('#8').css("background-image", 'url("../images/Typhoon_class_SSBN.png")');
+  $('#9').css("background-image", 'url("../images/ZumwaltClassDestroyer.png")');
 }
 
 //------------------------------------------------------//
@@ -327,24 +342,18 @@ $(document).ready(function(){
     $('.roll-die').css("visibility", "hidden");
     $('.fire').css("visibility", "visible");
     $('.quit').css("visibility", "visible");
-    gameHasStarted = true;
     // After a few seconds, display the rules:
     setTimeout(function(){
       $('.intro').empty();
       $('<li>The game has now begun. To win, you must sink all your opponent\'s ships.</li>').appendTo('.intro');
       $('<li>Click an enemy tile to select/deselect it. When ready, hit the fire button.</li>').appendTo('.intro');
       $('<li>Misses are marked in white; hits with black. Good luck!</li>').appendTo('.intro');
-    }, 5000);
+    }, 4000);
   });
-
-  // yellow --> blue (deselect)
-  // blue --> yellow (select)
-  // Multiple selects
-
 
   // GAMEPLAY EVENT HANDLERS
   $('.board2').on('click', function(event){
-    if(gameHasStarted === true && playerTurn === true){
+    if(playerTurn === true){
       let target = event.target.id;
       //Deny user the ability to target areas that have been hit (black) or missed (white)
       if(getColour(target) !== "rgb(255, 255, 255)" && getColour(target) !== "rgb(0, 0, 0)"){
@@ -363,7 +372,7 @@ $(document).ready(function(){
   });
 
   $('.fire').on('click', function(event){
-    if(gameHasStarted === true && playerTurn === true){
+    if(playerTurn === true){
       playerTurnAction(fireTarget);
     }
   });
