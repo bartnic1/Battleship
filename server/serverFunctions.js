@@ -103,7 +103,7 @@ module.exports = {
 
   convertToCoord: function(incomingShot){
     let shotStr = incomingShot.target.slice(1);
-    let newCoord = [shotStr[0], shotStr[1]];
+    let newCoord = [Number(shotStr[0]), Number(shotStr[1])];
     return newCoord;
   }
 

@@ -304,11 +304,11 @@ $(document).ready(function(){
       gameIsSettingUp = false;
       loadShipsOnBoard(finalShipLocations);
       //For testing purposes only (in reality, won't send res data over network!)
-      for (let row of Object.values(res)){
-        for (let coordinate of row){
-          $(`#o${coordinate[0]}${coordinate[1]}`).css("background-color", "red");
-        }
-      }
+      // for (let row of Object.values(res)){
+      //   for (let coordinate of row){
+      //     $(`#o${coordinate[0]}${coordinate[1]}`).css("background-color", "red");
+      //   }
+      // }
       //Show the roll die button to see whether the user rolls a higher number than the computer
       $('.new-game').css("visibility", "hidden");
       $('.roll-die').css("visibility", "visible");
