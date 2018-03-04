@@ -10,12 +10,15 @@
       <h1 class="title">Battleship Simulator</h1>
     </header>
     <button class="new-game">New Game</button>
+    <button class="roll-die">Roll Dodecahedron</button>
     <!-- Important notifications: Turn, placement of ships -->
     <div class="notifications-outer"> Notifications
       <div class="notifications-body">
         <ul class="notifications-list">
+          <div class="intro">
           <li>Welcome to Battleship! </li>
           <li>Select a ship below the player grid, then click on grid squares to outline ship placement. When finished, press space.</li>
+          </div>
           <div class="ship-selection">
           </div>
           <div class="ship-error">
@@ -26,8 +29,8 @@
       </div>
     </div>
     <div class="player-titles">
-      <div class="players">Player</div>
-      <div class="players">Opponent</div>
+      <div class="players" id="player">Player</div>
+      <div class="players" id="opponent">Opponent</div>
     </div>
     <div class="playspace">
       <!-- Form of grid-area: N/W/S/E. Need at least a difference of 1. -->

@@ -108,6 +108,20 @@ function checkIfDone(){
   return true;
 }
 
+function getRandomInt(max){
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+//Multiple css properties added for cross-browser support
+function setGlowFirst(player1, player2){
+  player1.css("-webkit-animation", "neon3 1.5s ease-in-out infinite alternate");
+  player1.css("-moz-animation", "neon3 1.5s ease-in-out infinite alternate");
+  player1.css("animation", "neon3 1.5s ease-in-out infinite alternate");
+  player2.css("-webkit-animation", "0");
+  player2.css("-moz-animation", "0");
+  player2.css("animation", "0");
+}
+
 $(document).ready(function(){
 
   //This event handler is used determine which parts of the board can be selected on setup
@@ -193,23 +207,51 @@ $(document).ready(function(){
       //Reset the temp location array for another ship
       tempShipLocArray = [];
     }
-    //When all ships placed, create start game button
+    //When all ships placed, allow new game button to be pressed
     if(checkIfDone()){
       $(`<li>All ships placed. Press new game above to begin!</li>`).appendTo($('.ships-placed'));
       $('.new-game').css("visibility", "visible");
     }
   });
 
+  //TO DO NEW:
+
+  //Disallow player from selecting from their ship box
+  //Allow player to shoot enemy, and enemy to shoot player. The first person who hits
+
   $('.new-game').on('click', function(event){
+    //Reset notifications and hide new-game button
+    $('.ships-placed').empty();
+    $('.intro').empty();
+    $('.new-game').css("visibility", "hidden");
+    //Send ship data to server for reference (i.e. how many ships to generate, and their lengths)
     $.post("/battle", finalShipLocations).done(function(res){
       for (let row of Object.values(res)){
         for (let coordinate of row){
           $(`#o${coordinate[0]}${coordinate[1]}`).css("background-color", "red");
         }
       }
-      // console.log("new object", Object.values(res));
-      // console.log("first row", Object.values(res)[0]);
-      // console.log("first entry, first row", Object.values(res)[0][0]);
+      //Show the roll die button to see whether the user rolls a higher number than the computer
+      $('.roll-die').css("visibility", "visible");
+      $(`<li>Press the roll dodecahedron button; the player with the highest number goes first!</li>`).appendTo('.intro');
     });
+  });
+
+  $('.roll-die').on('click', function(event){
+    let userRoll = 0;
+    let opponentRoll = 0;
+    while(userRoll === opponentRoll){
+      userRoll = getRandomInt(12) + 1;
+      opponentRoll = getRandomInt(12) + 1;
+    }
+    $(`<li>You rolled: ${userRoll}</li>`).appendTo($('.intro'));
+    $(`<li>Your opponent rolled: ${opponentRoll}</li>`).appendTo($('.intro'));
+    if(userRoll > opponentRoll){
+      $('<li>Nice roll! You go first.</li>').appendTo($('.intro'));
+      setGlowFirst($('#player'), $('#opponent'));
+    }else{
+      $('<li>Nice try! You go second.</li>').appendTo($('.intro'));
+      setGlowFirst($('#opponent'), $('#player'));
+    }
   });
 });

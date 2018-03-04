@@ -23,16 +23,6 @@ app.get("/", (req, res) => {
   res.render("intro");
 });
 
-//NEW TO DO!
-
-//Need to create a local function that auto-generates a series of ships, and stores them locally on
-//the server (for now, no databases - but will want to use one later to keep a log of wins/losses)
-
-//Using the "done" call-back of the post request made after pressing "new game", need to create
-//new boolean that disallows players from clicking on their ship box.
-
-//The same callback will create an event listener on the enemy board
-
 function generateShips(ships){
   //Creates a random int from 0 up to but not including max
   function getRandomInt(max){
@@ -121,7 +111,6 @@ function generateShips(ships){
 
 app.post("/battle", (req, res) => {
   let compShips = generateShips(req.body);
-  console.log(compShips);
   res.send(compShips);
 });
 
