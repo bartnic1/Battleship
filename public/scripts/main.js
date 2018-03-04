@@ -216,13 +216,14 @@ function setGlowFirst(player1, player2){
 
 function addLog(coordinate, player, result){
   if(result[0] === "MISS" || result[0] === "HIT"){
-    $(`<li>${player} shoots at ${coordinate[0]}${gridBoundary[coordinate[1]]}: ${result[0]}</li>`).prependTo('.log-body');
+    $(`<li>${player} shoots at ${coordinate[0] + 1}${gridBoundary[coordinate[1]]}: ${result[0]}</li>`).prependTo('.log-body');
   }
   if(result[1] !== "none"){
     $(`<li>${player} has sunk a ${result[1]}!</li>`).prependTo('.log-body');
   }
   if(result[2] !== "none"){
-    $('<li>Congratulations, you win!</li>').prependTo('.log-body');
+    $(`<li>Congratulations, ${result[2]}</li>`).prependTo('.log-body');
+
   }
 }
 
@@ -264,6 +265,12 @@ function enemyTurnAction(){
     setGlowFirst($('#player'), $('#opponent'));
     playerTurn = true;
     addLog(res, "Player 2", shotCondition);
+    if(shotCondition[2] === "Player 2 Wins!"){
+      playerTurn = false;
+      $('.intro').empty();
+      $(`<li>Looks like the computer beat you. Better luck next time!</li>`).appendTo('.intro');
+      $(`<li>Press quit to return to the main menu.</li>`).appendTo('.intro');
+    }
   });
 }
 
@@ -279,8 +286,15 @@ function playerTurnAction(fireTarget){
       loadSunkShipOnTray(player2ShipIDs[res[1]]);
     }
     addLog(coord, "Player 1", res);
+    if(res[2] === "Player 1 Wins!"){
+      playerTurn = false;
+      $('.intro').empty();
+      $(`<li>Outstanding job. We'll add this to your list of victories!</li>`).appendTo('.intro');
+      $(`<li>Press quit to return to the main menu.</li>`).appendTo('.intro');
+    }else{
+      enemyTurnAction();
+    }
   });
-  enemyTurnAction();
 }
 
 //------------------------------------------------------//
@@ -346,7 +360,7 @@ $(document).ready(function(){
 
   $('body').on('keypress', function(event){
     if(gameIsSettingUp){
-      if(playerBoardSelectable && event.originalEvent.code === 'Space'){
+      if(playerBoardSelectable && event.originalEvent.code === 'KeyD'){
         event.preventDefault();
         //Test if ship has correct dimensions
         if(tempShipLocArray.length === shipIDLength[shipNumber][1] && shapeValid(tempShipLocArray, shipIDLength[shipNumber][1])){
@@ -425,12 +439,11 @@ $(document).ready(function(){
     //Hide or show relevant buttons
     $('.roll-die').css("visibility", "hidden");
     $('.fire').css("visibility", "visible");
-    $('.quit').css("visibility", "visible");
     // After a few seconds, display the rules:
     setTimeout(function(){
       $('.intro').empty();
       $('<li>The game has now begun. To win, you must sink all your opponent\'s ships.</li>').appendTo('.intro');
-      $('<li>Click an enemy tile to select/deselect it. When ready, hit the fire button.</li>').appendTo('.intro');
+      $('<li>Click an enemy tile to select/deselect it. When ready, hit the fire button or press "f".</li>').appendTo('.intro');
       $('<li>Misses are marked in white; hits with black. Good luck!</li>').appendTo('.intro');
     }, 4000);
   });
@@ -458,6 +471,14 @@ $(document).ready(function(){
   $('.fire').on('click', function(event){
     if(playerTurn === true && fireTarget !== undefined){
       playerTurnAction(fireTarget);
+    }
+  });
+
+  $('html').on('keypress', function(event){
+    if(event.originalEvent.code === 'KeyF'){
+      if(playerTurn === true && fireTarget !== undefined){
+        playerTurnAction(fireTarget);
+      }
     }
   });
 });

@@ -241,17 +241,17 @@ header {
   font-size: 1vw;
   width: 5vw;
   height: 2vw;
-  left: 10vw;
+  left: 7vw;
   top: 2vw;
 }
 
 .quit{
   position: absolute;
-  visibility: hidden;
+  visibility: visible;
   font-size: 1vw;
   width: 5vw;
   height: 2vw;
-  left: 4vw;
+  right: 4vw;
   top: 2vw;
 }
 

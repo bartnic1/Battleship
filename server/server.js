@@ -27,7 +27,7 @@ const gridSettings = {
   gridBoundary: {letters: 'ABCDEFGHIJ'}
 };
 //Time in milliseconds
-let serverResponseTime = 3000;
+let serverResponseTime = 0;
 
 //Shots taken by computer
 let shotsTaken = [];
@@ -66,6 +66,8 @@ app.put("/battle/placeShot", (req, res) => {
       if(placedShot[0] === coord[0] && placedShot[1] === coord[1]){
         serverShipsHit++;
         compShipsHit[ship]--;
+        console.log("Comp Ships Hit", compShipsHit);
+        console.log("Total comp ships hit", serverShipsHit);
         if(compShipsHit[ship] <= 0){
           response[1] = ship;
         }else{
@@ -94,6 +96,8 @@ app.get("/battle/getShot", (req, res) => {
   //Simulate server "thinking"
   setTimeout(function(){ return res.send(newShot); }, serverResponseTime);
 });
+
+
 
 //Logs to console if server is running
 app.listen(PORT, () => {
