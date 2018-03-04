@@ -13,8 +13,6 @@
 // Won't need to worry about ships since you won't be able to see them (and even then background-color
 // should still exist).
 
-// Simple solution:
-
 const express = require("express");
 const app = express();
 // http://localhost:8080
@@ -34,6 +32,8 @@ const gridSettings = {
   gridBoundary: {letters: 'ABCDEFGHIJ'}
 };
 
+let shotsTaken = [];
+
 //Imported server functions
 const serverFunctions = require("./serverFunctions.js");
 
@@ -51,7 +51,8 @@ app.post("/battle", (req, res) => {
 });
 
 app.put("/battle", (req, res) => {
-  let newShot = setTimeout(serverFunctions.randomShot(), 5000);
+  let newShot = setTimeout(serverFunctions.randomShot(shotsTaken), 5000);
+  shotsTaken.push(newShot);
   res.send(newShot);
 });
 

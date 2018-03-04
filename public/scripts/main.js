@@ -3,7 +3,7 @@
 //------------------------------------------------------//
 //Global variables and booleans                         //
 //------------------------------------------------------//
-
+//Startup variables
 let gameHasStarted = false;
 let gameIsSettingUp = true;
 let playerBoardSelectable = false;
@@ -14,8 +14,11 @@ let shipNumber;
 // Used to store data on ship locations
 let tempShipLocArray = [];
 let finalShipLocations = {};
-// Global variable used to store latest shot locations (can be extended to an array later)
+// Game state variables
 let fireTarget;
+let playerTurn = false;
+let playerShipsHit = 0;
+let opponentShipsHit = 0;
 //------------------------------------------------------//
 //Functions used by event handlers                      //
 //------------------------------------------------------//
@@ -132,13 +135,25 @@ function setGlowFirst(player1, player2){
   player2.css("animation", "0");
 }
 
-function enemyTurn(){
+// $(`#${res[0]}${res[1]}`).data("shot");
+function enemyTurnAction(){
+  playerTurn = false;
   $.post("/battle?_method=PUT").done(function(res){
-
+    for (let row of Object.values(finalShipLocations)){
+      for (let coordinate of row){
+        if(coordinate[0] === res[0] && coordinate[1] === res[1]){
+          playerShipsHit++;
+          $(`#${res[0]}${res[1]}`).css("background-color", "black");
+          playerTurn = true;
+          return;
+        }
+      }
+    }
+    $(`#${res[0]}${res[1]}`).css("background-color", "white");
   });
 }
 
-function playerTurn(){
+function playerTurnAction(){
   console.log("hello");
 }
 
@@ -292,7 +307,7 @@ $(document).ready(function(){
       $('<li>Nice try! You go second.</li>').appendTo('.intro');
       setGlowFirst($('#opponent'), $('#player'));
       //Call a function to deal with the enemy turn.
-      enemyTurn();
+      enemyTurnAction();
     }
 
     //Hide or show relevant buttons
@@ -310,15 +325,9 @@ $(document).ready(function(){
   });
 
 
-  // Cases: Its yellow, want to untarget. Its black or white: Can't target. Its blue, want to target.
-  // Won't need to worry about ships since you won't be able to see them (and even then background-color
-  // should still exist).
-
-  // Simple solution:
-
   // GAMEPLAY EVENT HANDLERS
   $('.board2').on('click', function(event){
-    if(gameHasStarted){
+    if(gameHasStarted === true && playerTurn === true){
       let target = event.target.id;
       //Turns untargeted square to targeted (yellow) square
       if(getColour(target) === "rgb(21, 32, 237)"){
@@ -334,8 +343,8 @@ $(document).ready(function(){
   });
 
   $('.fire').on('click', function(event){
-    if(gameHasStarted){
-      playerTurn();
+    if(gameHasStarted && playerTurn === true){
+      playerTurnAction();
     }
   });
 });
