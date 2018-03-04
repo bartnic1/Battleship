@@ -11,8 +11,9 @@
     </header>
     <button class="new-game">New Game</button>
     <button class="roll-die">Roll Dodecahedron</button>
+    <button class="quit">Quit</button>
     <button class="fire">Fire!</button>
-    <!-- Important notifications: Turn, placement of ships -->
+    <!-- Important notifications: Instructions, key events -->
     <div class="notifications-outer"> Notifications
       <div class="notifications-body">
         <ul class="notifications-list">
@@ -35,23 +36,29 @@
     </div>
     <div class="playspace">
       <!-- Form of grid-area: N/W/S/E. Need at least a difference of 1. -->
+      <!-- Board 1 is the player board -->
       <div class="board1">
+        <!-- Grid boundary boxes -->
         <%const z = gridBoundary.letters%>
-        <div class="box" style="grid-area: 1/1/1/1"></div>
+        <div class="box-outer" style="grid-area: 1/1/1/1"></div>
         <%for(let i = 2; i <= 11; i++){%>
-          <div class="box" style="grid-area: <%=1%>/<%=i%>/<%=2%>/<%=i+1%>"><%=z[i-2]%></div>
-          <div class="box" style="grid-area: <%=i%>/<%=1%>/<%=i+1%>/<%=2%>"><%=i-1%></div>
+          <div class="box-outer" style="grid-area: <%=1%>/<%=i%>/<%=2%>/<%=i+1%>"><%=z[i-2]%></div>
+          <div class="box-outer" style="grid-area: <%=i%>/<%=1%>/<%=i+1%>/<%=2%>"><%=i-1%></div>
+        <!-- Core grid boxes -->
         <%for(let j = 2; j <= 11; j++){%>
-          <div class="box" id=<%=i-2%><%=j-2%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
+          <div class="box-inner image" id=<%=i-2%><%=j-2%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
         <%}};%>
       </div>
+      <!-- Board 2 is the opponent board -->
       <div class="board2">
-        <div class="box" style="grid-area: 1/1/1/1"></div>
+        <!-- Grid boundary -->
+        <div class="box-outer" style="grid-area: 1/1/1/1"></div>
         <%for(let i = 2; i <= 11; i++){%>
-        <div class="box" style="grid-area: <%=i%>/<%=1%>/<%=i+1%>/<%=2%>"><%=i-1%></div>
-        <div class="box" style="grid-area: <%=1%>/<%=i%>/<%=2%>/<%=i+1%>"><%=z[i-2]%></div>
+        <div class="box-outer" style="grid-area: <%=i%>/<%=1%>/<%=i+1%>/<%=2%>"><%=i-1%></div>
+        <div class="box-outer" style="grid-area: <%=1%>/<%=i%>/<%=2%>/<%=i+1%>"><%=z[i-2]%></div>
         <%for(let j = 2; j <= 11; j++){%>
-        <div class="box" id=o<%=i-2%><%=j-2%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
+        <!-- Core grid -->
+        <div class="box-inner" id=o<%=i-2%><%=j-2%> style="grid-area: <%=i%>/<%=j%>/<%=i+1%>/<%=j+1%>"></div>
         <%}}%>
       </div>
     </div>
@@ -65,7 +72,7 @@
     </div>
     <div id="ships-box-player" class="ships-boxes">
       <%for(let i = 0; i < 5; i++){%>
-        <div id="<%=i%>" class=ships-box-inner></div>
+        <div id="<%=i%>" class="ships-box-inner image"></div>
       <%}%>
     </div>
     <!-- The log takes note of if ships have been hit or sunk over the course of the game -->

@@ -132,17 +132,40 @@ function setGlowFirst(player1, player2){
   player2.css("animation", "0");
 }
 
+function enemyTurn(){
+  $.post("/battle?_method=PUT").done(function(res){
+
+  });
+}
+
+function playerTurn(){
+  console.log("hello");
+}
+
+function getID(coordinate){
+  return `#${coordinate[0]}${coordinate[1]}`;
+}
+
+//To be implemented upon completion of core tasks
+function loadShipsOnBoard(playerShips){
+  console.log("hello");
+}
+
+function loadShipsOnTray(){
+  $('#0').css("background-image", 'url("../images/carrierShokaku1942.png")');
+  $('#1').css("background-image", 'url("../images/battleshipKongo1944.png")');
+  $('#2').css("background-image", 'url("../images/cruiserNagato1944.png")');
+  $('#3').css("background-image", 'url("../images/Typhoon_class_SSBN.png")');
+  $('#4').css("background-image", 'url("../images/ZumwaltClassDestroyer.png")');
+}
+
 //------------------------------------------------------//
 //Document.ready event handlers                         //
 //------------------------------------------------------//
 
-//TO DO :
-
-//Allow player to shoot enemy, and enemy to shoot player.
-
-
 $(document).ready(function(){
 
+  loadShipsOnTray();
   //This event handler is used determine which parts of the board can be selected on setup
   $('.board1').on('click', function(event){
     let targetID = event.target.id;
@@ -227,7 +250,6 @@ $(document).ready(function(){
     }
   });
 
-
   // NEW GAME SETUP
 
   $('.new-game').on('click', function(event){
@@ -237,7 +259,7 @@ $(document).ready(function(){
     //Send ship data to server for reference (i.e. how many ships to generate, and their lengths)
     $.post("/battle", finalShipLocations).done(function(res){
       gameIsSettingUp = false;
-
+      loadShips(finalShipLocations);
       //For testing purposes only (in reality, won't send res data over network!)
       for (let row of Object.values(res)){
         for (let coordinate of row){
@@ -260,6 +282,7 @@ $(document).ready(function(){
       userRoll = getRandomInt(12) + 1;
       opponentRoll = getRandomInt(12) + 1;
     }
+    //Results of dice rolling:
     $(`<li>You rolled: ${userRoll}</li>`).appendTo('.intro');
     $(`<li>Your opponent rolled: ${opponentRoll}</li>`).appendTo('.intro');
     if(userRoll > opponentRoll){
@@ -268,10 +291,14 @@ $(document).ready(function(){
     }else{
       $('<li>Nice try! You go second.</li>').appendTo('.intro');
       setGlowFirst($('#opponent'), $('#player'));
+      //Call a function to deal with the enemy turn.
+      enemyTurn();
     }
-    $('<li>Nice try! You go second.</li>').appendTo('.intro');
+
+    //Hide or show relevant buttons
     $('.roll-die').css("visibility", "hidden");
     $('.fire').css("visibility", "visible");
+    $('.quit').css("visibility", "visible");
     gameHasStarted = true;
     // After a few seconds, display the rules:
     setTimeout(function(){
@@ -279,9 +306,15 @@ $(document).ready(function(){
       $('<li>The game has now begun. To win, you must sink all your opponent\'s ships.</li>').appendTo('.intro');
       $('<li>Click an enemy tile to select/deselect it. When ready, hit the fire button.</li>').appendTo('.intro');
       $('<li>Misses are marked in white; hits with black. Good luck!</li>').appendTo('.intro');
-    }, 3000);
+    }, 5000);
   });
 
+
+  // Cases: Its yellow, want to untarget. Its black or white: Can't target. Its blue, want to target.
+  // Won't need to worry about ships since you won't be able to see them (and even then background-color
+  // should still exist).
+
+  // Simple solution:
 
   // GAMEPLAY EVENT HANDLERS
   $('.board2').on('click', function(event){
@@ -291,6 +324,7 @@ $(document).ready(function(){
       if(getColour(target) === "rgb(21, 32, 237)"){
         $(`#${target}`).css("background-color", "rgb(255, 255, 0)");
         fireTarget = target;
+
       //Turns targeted square into untargeted square
       }else if(getColour(target) === "rgb(255, 255, 0)"){
         $(`#${target}`).css("background-color", "rgb(21, 32, 237)");
@@ -301,7 +335,7 @@ $(document).ready(function(){
 
   $('.fire').on('click', function(event){
     if(gameHasStarted){
-      console.log("hello");
+      playerTurn();
     }
   });
 });

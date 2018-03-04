@@ -1,3 +1,20 @@
+//List of things to do:
+
+// 1. Get rid of repeating random int function in serverfunctions
+
+// 2. Stretch: Get images of ships, evenly divided, loaded onto the board when playing;
+// will also need to work out how they will look when damaged - it seems to override background-color.
+
+// 3. Add side-images of ships to computer or opponent's tray.
+
+// 4. Get basic gameplay working!!!!! (priority - see gameplay event handlers)
+
+// Cases: Its yellow, want to untarget. Its black or white: Can't target. Its blue, want to target.
+// Won't need to worry about ships since you won't be able to see them (and even then background-color
+// should still exist).
+
+// Simple solution:
+
 const express = require("express");
 const app = express();
 // http://localhost:8080
@@ -11,9 +28,14 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+//Server Data
+
 const gridSettings = {
   gridBoundary: {letters: 'ABCDEFGHIJ'}
 };
+
+//Imported server functions
+const serverFunctions = require("./serverFunctions.js");
 
 app.get("/battle", (req, res) => {
   res.render("battle", gridSettings);
@@ -23,95 +45,14 @@ app.get("/", (req, res) => {
   res.render("intro");
 });
 
-function generateShips(ships){
-  //Creates a random int from 0 up to but not including max
-  function getRandomInt(max){
-    return Math.floor(Math.random() * Math.floor(max));
-  }
-  function generateLine(direction, coord, length){
-    let points = [coord];
-    switch(direction){
-    case "north":
-      for(let i = 1; i < length; i++){
-        points.push([coord[0], coord[1] - i]);
-      }
-      break;
-    case "east":
-      for(let i = 1; i < length; i++){
-        points.push([coord[0] + i, coord[1]]);
-      }
-      break;
-    case "south":
-      for(let i = 1; i < length; i++){
-        points.push([coord[0], coord[1] + i]);
-      }
-      break;
-    case "west":
-      for(let i = 1; i < length; i++){
-        points.push([coord[0] - i, coord[1]]);
-      }
-      break;
-    default:
-      break;
-    }
-    return points;
-  }
-
-  function isColliding(points, allShipLocs){
-    for(newPoint of points){
-      for(existingPoint of allShipLocs){
-        if(newPoint[0] === existingPoint[0] && newPoint[1] === existingPoint[1]){
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  let allShipLocs = [];
-  let computerShips = {};
-  let points;
-  for(ship in ships){
-    badCoordinate = true;
-    let length = ships[ship].length;
-    while(badCoordinate){
-      let x = getRandomInt(10);
-      let y = getRandomInt(10);
-      let coord = [x, y];
-      //Check all four cardinal directions; if any work, check for intersections with other ships
-      if(y - length + 1 >= 0){
-        points = generateLine("north", coord, length);
-        if(!isColliding(points, allShipLocs)){
-          break;
-        }
-      }if(x + length - 1 <= 9){
-        points = generateLine("east", coord, length);
-        if(!isColliding(points, allShipLocs)){
-          break;
-        }
-      }if(y + length - 1 <= 9){
-        points = generateLine("south", coord, length);
-        if(!isColliding(points, allShipLocs)){
-          break;
-        }
-      }if(x - length + 1 >= 0){
-        points = generateLine("south", coord, length);
-        if(!isColliding(points, allShipLocs)){
-          break;
-        }
-      }
-    }
-    for (coordinate of points){
-      allShipLocs.push(coordinate);
-    }
-    computerShips[ship] = points;
-  }
-  return computerShips;
-}
-
 app.post("/battle", (req, res) => {
-  let compShips = generateShips(req.body);
+  let compShips = serverFunctions.generateShips(req.body);
   res.send(compShips);
+});
+
+app.put("/battle", (req, res) => {
+  let newShot = setTimeout(serverFunctions.randomShot(), 5000);
+  res.send(newShot);
 });
 
 //Logs to console if server is running

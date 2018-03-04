@@ -100,7 +100,7 @@ header {
   /*transform: translate(-50%, 20%);*/
 }
 
-.box{
+.box-outer{
   border: 1px solid #000000;
   background-color: #1520ed;
   color: #ffffff;
@@ -109,6 +109,14 @@ header {
   /*line-height: 0.1vw;*/
   font-family: 'Aldrich';
   padding: 1vw 0 0 0;
+}
+
+
+.box-inner{
+  border: 1px solid #000000;
+  background-color: #1520ed;
+  padding: 0;
+  margin: 0;
 }
 
 .ships-boxes{
@@ -129,6 +137,12 @@ header {
 
 #ships-box-opponent{
   margin-right: 3vw;
+}
+
+.image{
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .ships-box-inner {
@@ -224,10 +238,20 @@ header {
   position: absolute;
   visibility: hidden;
   font-size: 1vw;
-  width: 8vw;
-  height: 3vw;
-  left: 6vw;
-  top: 1vw;
+  width: 5vw;
+  height: 2vw;
+  left: 10vw;
+  top: 2vw;
+}
+
+.quit{
+  position: absolute;
+  visibility: hidden;
+  font-size: 1vw;
+  width: 5vw;
+  height: 2vw;
+  left: 5vw;
+  top: 2vw;
 }
 
 #player{
