@@ -145,6 +145,7 @@ function setGlowFirst(player1, player2){
 
 // $(`#${res[0]}${res[1]}`).data("shot");
 function enemyTurnAction(){
+  fireTarget = undefined;
   function checkShot(res){
     for (let shiptype in finalShipLocations){
       for (let coordinate of finalShipLocations[shiptype]){
@@ -372,7 +373,7 @@ $(document).ready(function(){
   });
 
   $('.fire').on('click', function(event){
-    if(playerTurn === true){
+    if(playerTurn === true && fireTarget !== undefined){
       playerTurnAction(fireTarget);
     }
   });
