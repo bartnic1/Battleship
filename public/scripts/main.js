@@ -9,6 +9,8 @@ let playerBoardSelectable = false;
 let shipSelectedData = [[false, false, false, false, false], [0, 0, 0, 0, 0]];
 // 0: Carrier(5), 1:Battleship(4), 2:Cruiser(3), 3:Submarine(3), 4:Destroyer(2)
 let shipIDLength = [["Carrier", 5], ["Battleship", 4], ["Cruiser", 3], ["Submarine", 3], ["Destroyer", 2]];
+let player1ShipIDs = {Carrier: "#0", Battleship: "#1", Cruiser: "#2", Submarine: "#3", Destroyer: "#4"};
+let player2ShipIDs = {Carrier: "#5", Battleship: "#6", Cruiser: "#7", Submarine: "#8", Destroyer: "#9"};
 let shipNumber;
 // Used to store data on ship locations
 let gridBoundary = "ABCDEFGHIJ";
@@ -23,6 +25,56 @@ let shotCondition = [0, 0, 0];
 let playerTurn = false;
 let clientShipsHit = 0;
 let clientMaxHits = 17;
+
+//------------------------------------------------------//
+//Functions used in loading resources                   //
+//------------------------------------------------------//
+
+
+//To be implemented upon completion of core tasks
+function loadShipsOnBoard(playerShips){
+  // console.log("hello");
+}
+
+function loadShipsOnTray(){
+  $('#0').css("background-image", 'url("../images/carrierShokaku1942.png")');
+  $('#1').css("background-image", 'url("../images/battleshipKongo1944.png")');
+  $('#2').css("background-image", 'url("../images/cruiserNagato1944.png")');
+  $('#3').css("background-image", 'url("../images/Typhoon_class_SSBN.png")');
+  $('#4').css("background-image", 'url("../images/ZumwaltClassDestroyer.png")');
+  $('#5').css("background-image", 'url("../images/carrierShokaku1942.png")');
+  $('#6').css("background-image", 'url("../images/battleshipKongo1944.png")');
+  $('#7').css("background-image", 'url("../images/cruiserNagato1944.png")');
+  $('#8').css("background-image", 'url("../images/Typhoon_class_SSBN.png")');
+  $('#9').css("background-image", 'url("../images/ZumwaltClassDestroyer.png")');
+}
+
+function loadSunkShipOnTray(id){
+  switch(id){
+  case '#0': $('#0').css("background-image", 'url("../images/carrierOriskanySinking.png")');
+    break;
+  case '#1': $('#1').css("background-image", 'url("../images/battleshipUSSTowersSinking.png")');
+    break;
+  case '#2': $('#2').css("background-image", 'url("../images/cruiserUSSMassachusetts1921Sinking.png")');
+    break;
+  case '#3': $('#3').css("background-image", 'url("../images/submarineU175_sinking.png")');
+    break;
+  case '#4': $('#4').css("background-image", 'url("../images/destroyerWakatsuki1944Sinking.png")');
+    break;
+  case '#5': $('#5').css("background-image", 'url("../images/carrierOriskanySinking.png")');
+    break;
+  case '#6': $('#6').css("background-image", 'url("../images/battleshipUSSTowersSinking.png")');
+    break;
+  case '#7': $('#7').css("background-image", 'url("../images/cruiserUSSMassachusetts1921Sinking.png")');
+    break;
+  case '#8': $('#8').css("background-image", 'url("../images/submarineU175_sinking.png")');
+    break;
+  case '#9': $('#9').css("background-image", 'url("../images/destroyerWakatsuki1944Sinking.png")');
+    break;
+  default:
+    break;
+  }
+}
 
 //------------------------------------------------------//
 //Functions used in setup phase (and some utility)      //
@@ -183,6 +235,7 @@ function enemyTurnAction(){
           playerShipsHit[shiptype]--;
           if(playerShipsHit[shiptype] <= 0){
             shotCondition[1] = shiptype;
+            loadSunkShipOnTray(player1ShipIDs[shiptype]);
           }else{
             shotCondition[1] = "none";
           }
@@ -215,7 +268,6 @@ function enemyTurnAction(){
 }
 
 function playerTurnAction(fireTarget){
-  console.log(fireTarget);
   let coord = getCoord(fireTarget);
   $.post("/battle/placeShot?_method=PUT", {target: coord}).done(function(res){
     if(res[0] === "HIT"){
@@ -223,33 +275,12 @@ function playerTurnAction(fireTarget){
     }else if(res[0] === "MISS"){
       $(`#${fireTarget}`).css("background-color", "white");
     }
+    if(res[1] !== "none"){
+      loadSunkShipOnTray(player2ShipIDs[res[1]]);
+    }
     addLog(coord, "Player 1", res);
   });
   enemyTurnAction();
-}
-
-//------------------------------------------------------//
-//Functions used in loading resources                   //
-//------------------------------------------------------//
-
-
-
-//To be implemented upon completion of core tasks
-function loadShipsOnBoard(playerShips){
-  // console.log("hello");
-}
-
-function loadShipsOnTray(){
-  $('#0').css("background-image", 'url("../images/carrierShokaku1942.png")');
-  $('#1').css("background-image", 'url("../images/battleshipKongo1944.png")');
-  $('#2').css("background-image", 'url("../images/cruiserNagato1944.png")');
-  $('#3').css("background-image", 'url("../images/Typhoon_class_SSBN.png")');
-  $('#4').css("background-image", 'url("../images/ZumwaltClassDestroyer.png")');
-  $('#5').css("background-image", 'url("../images/carrierShokaku1942.png")');
-  $('#6').css("background-image", 'url("../images/battleshipKongo1944.png")');
-  $('#7').css("background-image", 'url("../images/cruiserNagato1944.png")');
-  $('#8').css("background-image", 'url("../images/Typhoon_class_SSBN.png")');
-  $('#9').css("background-image", 'url("../images/ZumwaltClassDestroyer.png")');
 }
 
 //------------------------------------------------------//
