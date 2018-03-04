@@ -220,11 +220,21 @@ header {
   top: 1vw;
 }
 
+.fire{
+  position: absolute;
+  visibility: hidden;
+  font-size: 1vw;
+  width: 8vw;
+  height: 3vw;
+  left: 6vw;
+  top: 1vw;
+}
+
 #player{
   color: white;
-  -webkit-animation: neon3 1.5s ease-in-out infinite alternate;
-  -moz-animation: neon3 1.5s ease-in-out infinite alternate;
-  animation: neon3 1.5s ease-in-out infinite alternate;
+  -webkit-animation: 0;
+  -moz-animation: 0;
+  animation: 0;
 }
 
 #opponent{
