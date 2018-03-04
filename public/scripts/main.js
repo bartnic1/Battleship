@@ -11,16 +11,21 @@ let shipSelectedData = [[false, false, false, false, false], [0, 0, 0, 0, 0]];
 let shipIDLength = [["Carrier", 5], ["Battleship", 4], ["Cruiser", 3], ["Submarine", 3], ["Destroyer", 2]];
 let shipNumber;
 // Used to store data on ship locations
+let gridBoundary = "ABCDEFGHIJ";
 let tempShipLocArray = [];
 let finalShipLocations = {};
+let playerShipsHit = {};
 // Game state variables
 let fireTarget;
 let prevTarget;
+let shotCondition = [0, 0, 0];
 
 let playerTurn = false;
-let playerShipsHit = 0;
+let clientShipsHit = 0;
+let clientMaxHits = 17;
+
 //------------------------------------------------------//
-//Functions used by event handlers                      //
+//Functions used in setup phase (and some utility)      //
 //------------------------------------------------------//
 
 
@@ -129,6 +134,20 @@ function getID(coordinate){
   return `#${coordinate[0]}${coordinate[1]}`;
 }
 
+function getCoord(player2ID){
+  let sliced = player2ID.slice(1);
+  let coord = [Number(sliced[0]), Number(sliced[1])];
+  return coord;
+}
+
+function shipsHitObject(playerShips){
+  let shipsHitObj = {};
+  for (let ship in playerShips){
+    shipsHitObj[ship] = playerShips[ship].length;
+  }
+  return shipsHitObj;
+}
+
 //------------------------------------------------------//
 //Functions used in gameplay                            //
 //------------------------------------------------------//
@@ -143,43 +162,75 @@ function setGlowFirst(player1, player2){
   player2.css("animation", "0");
 }
 
-// $(`#${res[0]}${res[1]}`).data("shot");
+function addLog(coordinate, player, result){
+  if(result[0] === "MISS" || result[0] === "HIT"){
+    $(`<li>${player} shoots at ${coordinate[0]}${gridBoundary[coordinate[1]]}: ${result[0]}</li>`).prependTo('.log-body');
+  }
+  if(result[1] !== "none"){
+    $(`<li>${player} has sunk a ${result[1]}!</li>`).prependTo('.log-body');
+  }
+  if(result[2] !== "none"){
+    $('<li>Congratulations, you win!</li>').prependTo('.log-body');
+  }
+}
+
 function enemyTurnAction(){
-  fireTarget = undefined;
   function checkShot(res){
     for (let shiptype in finalShipLocations){
       for (let coordinate of finalShipLocations[shiptype]){
         if(Number(coordinate[0]) === res[0] && Number(coordinate[1]) === res[1]){
-          playerShipsHit++;
+          clientShipsHit++;
+          playerShipsHit[shiptype]--;
+          if(playerShipsHit[shiptype] <= 0){
+            shotCondition[1] = shiptype;
+          }else{
+            shotCondition[1] = "none";
+          }
+          if(clientShipsHit >= clientMaxHits){
+            shotCondition[2] = "Player 2 Wins!";
+          }else{
+            shotCondition[2] = "none";
+          }
           $(getID(res)).css("background-color", "black");
+          shotCondition[0] = "HIT";
           return;
         }
       }
     }
+    shotCondition[0] = "MISS";
+    shotCondition[1] = "none";
+    shotCondition[2] = "none";
     $(getID(res)).css("background-color", "white");
+    return;
   }
+  fireTarget = undefined;
   playerTurn = false;
   setGlowFirst($('#opponent'), $('#player'));
   $.get("/battle/getShot", function(res) {
     checkShot(res);
     setGlowFirst($('#player'), $('#opponent'));
     playerTurn = true;
+    addLog(res, "Player 2", shotCondition);
   });
 }
 
 function playerTurnAction(fireTarget){
-  $.post("/battle/placeShot?_method=PUT", {target: fireTarget}).done(function(res){
-    if(res === "hit"){
+  console.log(fireTarget);
+  let coord = getCoord(fireTarget);
+  $.post("/battle/placeShot?_method=PUT", {target: coord}).done(function(res){
+    if(res[0] === "HIT"){
       $(`#${fireTarget}`).css("background-color", "black");
-    }else if(res === "miss"){
+    }else if(res[0] === "MISS"){
       $(`#${fireTarget}`).css("background-color", "white");
-    }else if(res === "playerWins"){
-      $('.intro').empty();
-      $('<li>Congratulations, you win!</li>').appendTo('.intro');
     }
+    addLog(coord, "Player 1", res);
   });
   enemyTurnAction();
 }
+
+//------------------------------------------------------//
+//Functions used in loading resources                   //
+//------------------------------------------------------//
 
 
 
@@ -286,6 +337,7 @@ $(document).ready(function(){
       }
       //When all ships placed, allow new game button to be pressed
       if(checkIfDone()){
+        playerShipsHit = shipsHitObject(finalShipLocations);
         $('.ships-placed').empty();
         $(`<li>All ships placed. Press new game (above) to begin!</li>`).appendTo('.ships-placed');
         $('.new-game').css("visibility", "visible");

@@ -86,6 +86,14 @@ module.exports = {
     return computerShips;
   },
 
+  shipsHitObject: function(compShips){
+    let shipsHitObj = {};
+    for (let ship in compShips){
+      shipsHitObj[ship] = compShips[ship].length;
+    }
+    return shipsHitObj;
+  },
+
   randomShot: function(shotsTaken){
     let alreadyShot = true;
     let newShotCoordinates;
@@ -99,12 +107,5 @@ module.exports = {
       }
     }
     return newShotCoordinates;
-  },
-
-  convertToCoord: function(incomingShot){
-    let shotStr = incomingShot.target.slice(1);
-    let newCoord = [Number(shotStr[0]), Number(shotStr[1])];
-    return newCoord;
   }
-
 };
