@@ -13,6 +13,9 @@
 // Won't need to worry about ships since you won't be able to see them (and even then background-color
 // should still exist).
 
+// Idea: You could add in an html character, or some font-awesome character, which takes on the yellow/red
+// /black/white values, and then continue to use a background image.
+
 const express = require("express");
 const app = express();
 // http://localhost:8080
@@ -24,6 +27,7 @@ const path = require("path");
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //Server Data
@@ -50,10 +54,12 @@ app.post("/battle", (req, res) => {
   res.send(compShips);
 });
 
-app.put("/battle", (req, res) => {
-  let newShot = setTimeout(serverFunctions.randomShot(shotsTaken), 5000);
+app.put("/battle/takeShot", (req, res) => {
+  let newShot = serverFunctions.randomShot(shotsTaken);
   shotsTaken.push(newShot);
-  res.send(newShot);
+  console.log(shotsTaken);
+  // res.send(newShot);
+  setTimeout(res.send(newShot), 3000);
 });
 
 //Logs to console if server is running

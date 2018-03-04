@@ -1,9 +1,10 @@
+function getRandomInt(max){
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 module.exports = {
   generateShips: function (ships){
     //Creates a random int from 0 up to but not including max
-    function getRandomInt(max){
-      return Math.floor(Math.random() * Math.floor(max));
-    }
     function generateLine(direction, coord, length){
       let points = [coord];
       switch(direction){
@@ -86,13 +87,11 @@ module.exports = {
   },
 
   randomShot: function(shotsTaken){
-    function getRandomInt(max){
-      return Math.floor(Math.random() * Math.floor(max));
-    }
     let alreadyShot = true;
+    let newShotCoordinates;
     while(alreadyShot){
       alreadyShot = false;
-      let newShotCoordinates = [getRandomInt(10), getRandomInt(10)];
+      newShotCoordinates = [getRandomInt(10), getRandomInt(10)];
       for(let shot of shotsTaken){
         if(shot[0] === newShotCoordinates[0] && shot[1] === newShotCoordinates[1]){
           alreadyShot = true;

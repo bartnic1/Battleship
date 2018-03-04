@@ -16,6 +16,8 @@ let tempShipLocArray = [];
 let finalShipLocations = {};
 // Game state variables
 let fireTarget;
+let prevTarget;
+
 let playerTurn = false;
 let playerShipsHit = 0;
 let opponentShipsHit = 0;
@@ -137,24 +139,33 @@ function setGlowFirst(player1, player2){
 
 // $(`#${res[0]}${res[1]}`).data("shot");
 function enemyTurnAction(){
-  playerTurn = false;
-  $.post("/battle?_method=PUT").done(function(res){
-    for (let row of Object.values(finalShipLocations)){
-      for (let coordinate of row){
-        if(coordinate[0] === res[0] && coordinate[1] === res[1]){
+  function checkShot(res){
+    for (let shiptype in finalShipLocations){
+      for (let coordinate of finalShipLocations[shiptype]){
+        if(Number(coordinate[0]) === res[0] && Number(coordinate[1]) === res[1]){
           playerShipsHit++;
           $(`#${res[0]}${res[1]}`).css("background-color", "black");
+          setGlowFirst($('#player'), $('#opponent'));
           playerTurn = true;
           return;
         }
       }
     }
     $(`#${res[0]}${res[1]}`).css("background-color", "white");
+    setGlowFirst($('#player'), $('#opponent'));
+    playerTurn = true;
+  }
+  playerTurn = false;
+  setGlowFirst($('#opponent'), $('#player'));
+  $.post("/battle/takeShot?_method=PUT").done(function(res){
+    setTimeout(checkShot(res), 2000);
   });
 }
 
-function playerTurnAction(){
-  console.log("hello");
+function playerTurnAction(fireTarget){
+  console.log("firetarget: ", fireTarget);
+  enemyTurnAction();
+  return;
 }
 
 function getID(coordinate){
@@ -163,7 +174,7 @@ function getID(coordinate){
 
 //To be implemented upon completion of core tasks
 function loadShipsOnBoard(playerShips){
-  console.log("hello");
+  // console.log("hello");
 }
 
 function loadShipsOnTray(){
@@ -238,6 +249,7 @@ $(document).ready(function(){
   $('body').on('keypress', function(event){
     if(gameIsSettingUp){
       if(playerBoardSelectable && event.originalEvent.code === 'Space'){
+        event.preventDefault();
         //Test if ship has correct dimensions
         if(tempShipLocArray.length === shipIDLength[shipNumber][1] && shapeValid(tempShipLocArray, shipIDLength[shipNumber][1])){
           //If ship has correct length, keep track of these permanent coordinates
@@ -274,7 +286,7 @@ $(document).ready(function(){
     //Send ship data to server for reference (i.e. how many ships to generate, and their lengths)
     $.post("/battle", finalShipLocations).done(function(res){
       gameIsSettingUp = false;
-      loadShips(finalShipLocations);
+      loadShipsOnBoard(finalShipLocations);
       //For testing purposes only (in reality, won't send res data over network!)
       for (let row of Object.values(res)){
         for (let coordinate of row){
@@ -303,6 +315,7 @@ $(document).ready(function(){
     if(userRoll > opponentRoll){
       $('<li>Nice roll! You go first.</li>').appendTo('.intro');
       setGlowFirst($('#player'), $('#opponent'));
+      playerTurn = true;
     }else{
       $('<li>Nice try! You go second.</li>').appendTo('.intro');
       setGlowFirst($('#opponent'), $('#player'));
@@ -324,27 +337,34 @@ $(document).ready(function(){
     }, 5000);
   });
 
+  // yellow --> blue (deselect)
+  // blue --> yellow (select)
+  // Multiple selects
+
 
   // GAMEPLAY EVENT HANDLERS
   $('.board2').on('click', function(event){
     if(gameHasStarted === true && playerTurn === true){
       let target = event.target.id;
-      //Turns untargeted square to targeted (yellow) square
-      if(getColour(target) === "rgb(21, 32, 237)"){
-        $(`#${target}`).css("background-color", "rgb(255, 255, 0)");
-        fireTarget = target;
-
-      //Turns targeted square into untargeted square
-      }else if(getColour(target) === "rgb(255, 255, 0)"){
-        $(`#${target}`).css("background-color", "rgb(21, 32, 237)");
-        fireTarget = undefined;
+      //Deny user the ability to target areas that have been hit (black) or missed (white)
+      if(getColour(target) !== "rgb(255, 255, 255)" && getColour(target) !== "rgb(0, 0, 0)"){
+        //If previous target was yellow, then turn it back to the background color
+        if(getColour(prevTarget) === "rgb(255, 255, 0)"){
+          $(`#${prevTarget}`).css("background-color", "rgb(21, 32, 237)");
+        }
+        //Turns untargeted square to targeted (yellow) square
+        if(getColour(target) === "rgb(21, 32, 237)"){
+          $(`#${target}`).css("background-color", "rgb(255, 255, 0)");
+          fireTarget = target;
+          prevTarget = target;
+        }
       }
     }
   });
 
   $('.fire').on('click', function(event){
-    if(gameHasStarted && playerTurn === true){
-      playerTurnAction();
+    if(gameHasStarted === true && playerTurn === true){
+      playerTurnAction(fireTarget);
     }
   });
 });
