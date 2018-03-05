@@ -296,6 +296,8 @@ function playerTurnAction(fireTarget){
 
 $(document).ready(function(){
 
+// INITIAL SETUP
+
   loadShipsOnTray();
   //This event handler is used determine which parts of the board can be selected on setup
   $('.board1').on('click', function(event){
@@ -383,7 +385,7 @@ $(document).ready(function(){
     }
   });
 
-  // NEW GAME SETUP
+  // NEW GAME STARTED
 
   $('.new-game').on('click', function(event){
     //Reset notifications and hide new-game button
