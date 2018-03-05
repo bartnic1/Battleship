@@ -5,11 +5,13 @@
   font-weight: 400;
   src: local('Aldrich Regular'), local('Aldrich-Regular'), url(./aldrich.woff2) format('woff2');
 }
+
 .center-container {
   margin: 0;
+  padding: 5vw;
   position: absolute;
-  width: 25vw;
-  height: 15vw;
+  width: auto;
+  height: auto;
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -18,8 +20,27 @@
   text-align: center;
 }
 
-.form-style{
+.userSubmit{
+  font-family: 'Aldrich';
+  padding: 5px;
+  margin: 5px;
+}
+
+.form-style {
   padding: 5px;
   margin: 10px;
   font-family: 'Aldrich';
+}
+
+.welcome {
+  margin: 10px 5px 5px 5px;
+  padding: 5px;
+  font-family: 'Aldrich';
+}
+
+.logout {
+  margin: 5px;
+  padding: 5px;
+  font-family: 'Aldrich';
+  visibility: hidden;
 }

@@ -1,11 +1,11 @@
-//List of things to do:
+// remember this:
 
-// 2. Stretch: Get images of ships, evenly divided, loaded onto the board when playing;
-// will also need to work out how they will look when damaged - it seems to override background-color.
 
 // New idea: After placement is done, rearrange (sort) your array from lowest to highest.
 // Set the appropriate background-image, using the sorted order.
 // If going vertically, need to use new set of rotated images.
+
+//Get rid of console.logs when done!! (check for no continuity when refreshing server!)
 
 const express = require("express");
 const app = express();
@@ -22,13 +22,10 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //Server Data
-
-const gridSettings = {
-  gridBoundary: {letters: 'ABCDEFGHIJ'}
-};
-//Time in milliseconds
-let serverResponseTime = 0;
-
+//Define a local user database storing wins and losses
+let userData = {"Alfreds Futterkiste": {wins: 35, losses: 0}};
+let userList = [];
+let currentUser;
 //Shots taken by computer
 let shotsTaken = [];
 let compShips;
@@ -36,16 +33,69 @@ let compShipsHit;
 //Keeps track of hits server ships have taken
 let serverMaxHits = 17;
 let serverShipsHit = 0;
+//Time in milliseconds
+let serverResponseTime = 0;
+
+const gridSettings = {
+  gridBoundary: {letters: 'ABCDEFGHIJ'}
+};
+const leaderVals = {
+  userInfo: []
+};
+
 
 //Imported server functions
 const serverFunctions = require("./serverFunctions.js");
 
-app.get("/battle", (req, res) => {
-  res.render("battle", gridSettings);
-});
-
 app.get("/", (req, res) => {
   res.render("intro");
+});
+
+// { john: { wins: 0, losses: 0 }
+app.put("/users", (req, res) => {
+  if(userData[req.body.name] === undefined){
+    userData[req.body.name] = {wins: 0, losses: 0};
+    currentUser = req.body.name;
+  }
+  currentUser = req.body.name;
+  res.send(`Welcome, ${req.body.name}!`);
+});
+
+app.get("/users/current", (req, res) => {
+  if(currentUser === undefined){
+    res.send("nobody");
+  }else{
+    res.send(currentUser);
+  }
+});
+
+app.get("/stats", (req, res) => {
+  userList = [];
+  for(user in userData){
+    userList.push({user: user, wins: userData[user].wins, losses: userData[user].losses});
+  }
+  userList.sort(function(a, b){ return b.wins - a.wins; });
+  leaderVals.userInfo = userList;
+  res.render("leaderboard", leaderVals);
+});
+
+app.put("/stats", (req, res) => {
+  if(req.body.endState === "victory"){
+    userData[currentUser].wins++;
+  }else if(req.body.endState === "defeat"){
+    userData[currentUser].losses++;
+  }
+});
+
+
+app.get("/battle", (req, res) => {
+  //Reset all defaults upon starting a new game
+  shotsTaken = [];
+  compShips = undefined;
+  compShipsHit = undefined;
+  serverMaxhITS = 17;
+  serverShipsHit = 0;
+  res.render("battle", gridSettings);
 });
 
 //This generates a board of ships for the computer, as an object:
@@ -60,14 +110,12 @@ app.post("/battle", (req, res) => {
 //if it was a hit or a miss.
 app.put("/battle/placeShot", (req, res) => {
   let placedShot = [Number(req.body.target[0]), Number(req.body.target[1])];
-  let response = [0, 0, 0];
+  let response = [];
   for(let ship in compShips){
     for(let coord of compShips[ship]){
       if(placedShot[0] === coord[0] && placedShot[1] === coord[1]){
         serverShipsHit++;
         compShipsHit[ship]--;
-        console.log("Comp Ships Hit", compShipsHit);
-        console.log("Total comp ships hit", serverShipsHit);
         if(compShipsHit[ship] <= 0){
           response[1] = ship;
         }else{

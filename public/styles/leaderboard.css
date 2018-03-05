@@ -1,0 +1,37 @@
+@font-face {
+  font-family: 'Aldrich';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Aldrich Regular'), local('Aldrich-Regular'), url(./aldrich.woff2) format('woff2');
+}
+
+.leader-container{
+  font-family: 'Aldrich';
+  text-align: center;
+  width: 60%;
+  margin: 0 auto;
+}
+
+table {
+  height: auto;
+  width: 100%;
+}
+
+th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+td, th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.home{
+  position: relative;
+  float: right;
+  right: 20px;
+}

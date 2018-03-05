@@ -2,17 +2,32 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" href="styles/intro.css">
+    <script src="/scripts/jquery-3.2.1.js"></script>
+    <script src="/scripts/intro.js"></script>
   </head>
   <body>
     <div class="center-container">
-      <h1>Battleship</h1>
+      <h1 class="title">Battleship</h1>
       <div class="center">
-      <form method="GET" action="/battle">
-        <input type="submit" value="New Game" class="form-style">
-      </form>
-      <form method="GET" action="/stats">
-        <input type="submit" value="Leaderboard" class="form-style">
-      </form>
+        <form method="GET" action="/battle">
+          <input type="submit" value="New Game" class="form-style">
+        </form>
+        <form method="GET" action="/stats">
+          <input type="submit" value="Leaderboard" class="form-style">
+        </form>
+
+        <div class="userDiv">
+          <form class="userName" method="POST" action="/users">
+            <input type="text" name="name" placeholder="Name" class="form-style">
+            <input class="userSubmit" type="submit" value="Enter user ID">
+          </form>
+        </div>
+        <div>
+          <button class="logout">Logout</button>
+        </div>
+        <div class="welcome">
+        </div>
+      </div>
     </div>
   </body>
 </html>

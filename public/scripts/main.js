@@ -1,5 +1,3 @@
-// debugger; //<--allows you to stop execution in browser at this point, and look at event
-
 //------------------------------------------------------//
 //Global variables and booleans                         //
 //------------------------------------------------------//
@@ -7,7 +5,6 @@
 let gameIsSettingUp = true;
 let playerBoardSelectable = false;
 let shipSelectedData = [[false, false, false, false, false], [0, 0, 0, 0, 0]];
-// 0: Carrier(5), 1:Battleship(4), 2:Cruiser(3), 3:Submarine(3), 4:Destroyer(2)
 let shipIDLength = [["Carrier", 5], ["Battleship", 4], ["Cruiser", 3], ["Submarine", 3], ["Destroyer", 2]];
 let player1ShipIDs = {Carrier: "#0", Battleship: "#1", Cruiser: "#2", Submarine: "#3", Destroyer: "#4"};
 let player2ShipIDs = {Carrier: "#5", Battleship: "#6", Cruiser: "#7", Submarine: "#8", Destroyer: "#9"};
@@ -20,7 +17,7 @@ let playerShipsHit = {};
 // Game state variables
 let fireTarget;
 let prevTarget;
-let shotCondition = [0, 0, 0];
+let shotCondition = [];
 
 let playerTurn = false;
 let clientShipsHit = 0;
@@ -29,12 +26,6 @@ let clientMaxHits = 17;
 //------------------------------------------------------//
 //Functions used in loading resources                   //
 //------------------------------------------------------//
-
-
-//To be implemented upon completion of core tasks
-function loadShipsOnBoard(playerShips){
-  // console.log("hello");
-}
 
 function loadShipsOnTray(){
   $('#0').css("background-image", 'url("../images/carrierShokaku1942.png")');
@@ -270,6 +261,7 @@ function enemyTurnAction(){
       $('.intro').empty();
       $(`<li>Looks like the computer beat you. Better luck next time!</li>`).appendTo('.intro');
       $(`<li>Press quit to return to the main menu.</li>`).appendTo('.intro');
+      $.post("/stats?_method=PUT", {endState: "defeat"});
     }
   });
 }
@@ -291,6 +283,7 @@ function playerTurnAction(fireTarget){
       $('.intro').empty();
       $(`<li>Outstanding job. We'll add this to your list of victories!</li>`).appendTo('.intro');
       $(`<li>Press quit to return to the main menu.</li>`).appendTo('.intro');
+      $.post("/stats?_method=PUT", {endState: "victory"});
     }else{
       enemyTurnAction();
     }
@@ -399,13 +392,6 @@ $(document).ready(function(){
     //Send ship data to server for reference (i.e. how many ships to generate, and their lengths)
     $.post("/battle", finalShipLocations).done(function(res){
       gameIsSettingUp = false;
-      loadShipsOnBoard(finalShipLocations);
-      //For testing purposes only (in reality, won't send res data over network!)
-      // for (let row of Object.values(res)){
-      //   for (let coordinate of row){
-      //     $(`#o${coordinate[0]}${coordinate[1]}`).css("background-color", "red");
-      //   }
-      // }
       //Show the roll die button to see whether the user rolls a higher number than the computer
       $('.new-game').css("visibility", "hidden");
       $('.roll-die').css("visibility", "visible");
@@ -480,5 +466,9 @@ $(document).ready(function(){
         playerTurnAction(fireTarget);
       }
     }
+  });
+
+  $('.quit').on('click', function(event){
+    window.location.replace('/');
   });
 });

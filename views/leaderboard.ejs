@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="styles/leaderboard.css">
+    <script src="/scripts/jquery-3.2.1.js"></script>
+    <script src="/scripts/leaderboard.js"></script>
+  </head>
+  <body>
+    <div>
+      <button class="home" value="Home">Home</button>
+    </div>
+    <div class=leader-container>
+    <h1>Battleship Leaderboard</h1>
+    <table id="user-table">
+      <tr>
+        <th>User</th>
+        <th>Wins</th>
+        <th>Losses</th>
+      </tr>
+      <%for(let entry of userInfo){%>
+      <tr>
+        <td><%=entry.user%></td>
+        <td><%=entry.wins%></td>
+        <td><%=entry.losses%></td>
+      </tr>
+      <%}%>
+    </table>
+    </div>
+  </body>
+</html>
