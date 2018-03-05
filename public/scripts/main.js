@@ -251,7 +251,7 @@ function enemyTurnAction(){
   fireTarget = undefined;
   playerTurn = false;
   setGlowFirst($('#opponent'), $('#player'));
-  $.get("/battle/getShot", function(res) {
+  $.post("/battle/getShot?_method=PUT").done(function(res) {
     checkShot(res);
     setGlowFirst($('#player'), $('#opponent'));
     playerTurn = true;

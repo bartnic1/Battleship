@@ -72,7 +72,7 @@ module.exports = {
             break;
           }
         }if(x - length + 1 >= 0){
-          points = generateLine("south", coord, length);
+          points = generateLine("west", coord, length);
           if(!isColliding(points, allShipLocs)){
             break;
           }
@@ -94,9 +94,10 @@ module.exports = {
     return shipsHitObj;
   },
 
-  randomShot: function(shotsTaken){
+  //Note some global values are stored outside of function scope for future calls;
+  //see top of module
+  takeShot: function(shotsTaken){
     let alreadyShot = true;
-    let newShotCoordinates;
     while(alreadyShot){
       alreadyShot = false;
       newShotCoordinates = [getRandomInt(10), getRandomInt(10)];

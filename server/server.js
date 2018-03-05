@@ -138,8 +138,8 @@ app.put("/battle/placeShot", (req, res) => {
 
 //This asks the server to shoot a random spot on the player's board.
 //Future modifications of this game will include a harder AI that shoots nearer to previous hits.
-app.get("/battle/getShot", (req, res) => {
-  let newShot = serverFunctions.randomShot(shotsTaken);
+app.put("/battle/getShot", (req, res) => {
+  let newShot = serverFunctions.takeShot(shotsTaken);
   shotsTaken.push(newShot);
   //Simulate server "thinking"
   setTimeout(function(){ return res.send(newShot); }, serverResponseTime);
