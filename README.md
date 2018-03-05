@@ -61,7 +61,7 @@ Battleship is a mostly client-side web application that allows users to play a g
 ## Future Additions
 
 - I really want to improve on the AI so that it intelligently clusters shots after it hits a ship, but for now I am happy that the basic functionality exists.
-- For now, the AI makes guesses by choosing random numbers from 1 to 10 on each move.
+- For now, the AI makes guesses by choosing random numbers from 1 to 10 on each move. If it already guessed a specific value, it chooses again.
 
 ## Resources Used
 
