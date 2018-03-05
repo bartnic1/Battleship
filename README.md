@@ -4,8 +4,11 @@ Battleship is a mostly client-side web application that allows users to play a g
 
 ## Final Product
 
-### A Game of Battleship:
+### Starting a Game of Battleship:
 !["A game of Battleship"](https://github.com/bartnic1/tweeter/blob/master/loggedin.png)
+
+### Winning a Game:
+!["A won game"](https://github.com/bartnic1/tweeter/blob/master/loggedin.png)
 
 ### The Leaderboard:
 !["The Leaderboard"](https://github.com/bartnic1/tweeter/blob/master/loggedout.png)
