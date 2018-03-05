@@ -1,12 +1,3 @@
-// remember this:
-
-
-// New idea: After placement is done, rearrange (sort) your array from lowest to highest.
-// Set the appropriate background-image, using the sorted order.
-// If going vertically, need to use new set of rotated images.
-
-//Get rid of console.logs when done!! (check for no continuity when refreshing server!)
-
 const express = require("express");
 const app = express();
 // http://localhost:8080
@@ -34,7 +25,7 @@ let compShipsHit;
 let serverMaxHits = 17;
 let serverShipsHit = 0;
 //Time in milliseconds
-let serverResponseTime = 0;
+let serverResponseTime = 1500;
 
 const gridSettings = {
   gridBoundary: {letters: 'ABCDEFGHIJ'}
@@ -44,14 +35,16 @@ const leaderVals = {
 };
 
 
-//Imported server functions
+//Imported server functions, used in various paths below.
 const serverFunctions = require("./serverFunctions.js");
 
+//Renders the basic intro page.
 app.get("/", (req, res) => {
   res.render("intro");
 });
 
 // { john: { wins: 0, losses: 0 }
+// This adds a new user to a local database (userData)
 app.put("/users", (req, res) => {
   if(userData[req.body.name] === undefined){
     userData[req.body.name] = {wins: 0, losses: 0};
@@ -61,6 +54,8 @@ app.put("/users", (req, res) => {
   res.send(`Welcome, ${req.body.name}!`);
 });
 
+//Upon navigating back to the home page, an ajax request determines whether a user was previously
+//logged in. If so, the UI changes to reflect the appropriate state.
 app.get("/users/current", (req, res) => {
   if(currentUser === undefined){
     res.send("nobody");
@@ -69,6 +64,7 @@ app.get("/users/current", (req, res) => {
   }
 });
 
+//This is used to populate a leaderboard table, to show who has the most wins
 app.get("/stats", (req, res) => {
   userList = [];
   for(user in userData){
@@ -79,17 +75,19 @@ app.get("/stats", (req, res) => {
   res.render("leaderboard", leaderVals);
 });
 
+//Updates the stats based on a win or loss
 app.put("/stats", (req, res) => {
-  if(req.body.endState === "victory"){
-    userData[currentUser].wins++;
-  }else if(req.body.endState === "defeat"){
-    userData[currentUser].losses++;
+  if(currentUser !== undefined){
+    if(req.body.endState === "victory"){
+      userData[currentUser].wins++;
+    }else if(req.body.endState === "defeat"){
+      userData[currentUser].losses++;
+    }
   }
 });
 
-
+//Every time a new game of battleship is started, the game data is reset.
 app.get("/battle", (req, res) => {
-  //Reset all defaults upon starting a new game
   shotsTaken = [];
   compShips = undefined;
   compShipsHit = undefined;
@@ -138,14 +136,14 @@ app.put("/battle/placeShot", (req, res) => {
   return res.send(response);
 });
 
+//This asks the server to shoot a random spot on the player's board.
+//Future modifications of this game will include a harder AI that shoots nearer to previous hits.
 app.get("/battle/getShot", (req, res) => {
   let newShot = serverFunctions.randomShot(shotsTaken);
   shotsTaken.push(newShot);
   //Simulate server "thinking"
   setTimeout(function(){ return res.send(newShot); }, serverResponseTime);
 });
-
-
 
 //Logs to console if server is running
 app.listen(PORT, () => {

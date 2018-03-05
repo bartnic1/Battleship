@@ -1,56 +1,49 @@
-General Plan:
+# Battleship Project (v1.0.0)
 
--Need two grids; one for each player. Also need title, and number of ships destroyed on the side.
+Battleship is a mostly client-side web application that allows users to play a game of battleship against the computer. The project aims to reinforce an understanding on how to manage server requests through AJAX (without having to reload the page), as well as how to manipulate the DOM using jQuery.
 
-Using ejs loops, can fill up board with css grid elements that are all the same size, but each with a specific ID.
-This ID will have an x and y coordinate.
+## Final Product
 
-Each ship will be associated with a particular series of IDs. It should be possible to split an image of a ship into multiple pieces, and combine them across grids.
-Once one part is hit, the colour can change.
+### A Game of Battleship:
+!["A game of Battleship"](https://github.com/bartnic1/tweeter/blob/master/loggedin.png)
 
-GENERAL LAYOUT OF PAGES:
+### The Leaderboard:
+!["The Leaderboard"](https://github.com/bartnic1/tweeter/blob/master/loggedout.png)
 
-Splash Page:
-- New game button (links to placement board)
-- Leaderboard button
-- Login form, submit button
-- STRETCH: Set number of ships, shots per turn, board size
+## Dependencies
 
-PLACEMENT BOARD COMPLETE (can also include back to main menu button later)
+- Express
+- Node 5.10.x or above
+- Body-parser
+- Method-override
+- Path
+
+## Dev-dependencies
+
+- Eslint
+- Eslint-config-lighthouselabs
+- nodemon
+
+## Getting Started
+
+1. From the terminal, clone a copy of this repository into a directory (i.e. git clone git@github.com:bartnic1/Battleship.git battleship)
+2. Install all dependencies using the `npm install` command.
+3. Start the web server using the `npm run local` command. The app will be served at <http://localhost:8080/>.
+4. Navigate to <http://localhost:8080/> in your browser.
+5. Enter a new user ID (if not entered, you won't be able to see any of your win/loss stats)
+6. Press the "New Game" button. All of the relevant gameplay instructions are listed on a notifications panel placed on the left-hand side of the screen
+7. Once your game is complete, you may navigate back to the home page (press quit) to see updates on the leaderboard.
 
 
+## Useful Features
 
-Main Board:
-- Player board has ships, and shows shots from opponent
-- Opponent board shows shots taken by player
+- Allows users to compare their scores against others to see who has the greatest battleship skills.
+- A battle log maintains a constant feed of whether a player's shot hit, missed, sunk a ship, or won the game.
+- Dynamic graphics allows the player to see whose turn it is, as well as to view changes in the state of the ships as they are sunk.
+- Users are given complete freedom to place and replace their own ships on the board during the startup phase of the game.
+- The notifications panel guides users along each step of the way, from the start of the game until victory or defeat.
 
-- Can create a legend, indicating colour of hits and misses (red, white). Located on right end.
-- Coordinates along boundary of each board (A-J, 1-10)
-- Marker indicates who's turn it is. Located on left end
-- List of ships for each player. Located along bottom, in separate grid.
-- Log of shots taken, message when ship sunk. Located on the bottom left.
 
-- Can include main menu button on left hand side.
-- When player/opponent has won, player should be redirected to main menu.
+## Future Additions
 
-Leaderboard:
-- Lists number of wins and losses per player against computer
-- Links back to main menu
-=============================================
-
-Qs:
-Is it okay to use ejs to create our web page?
-YES
-
-Readme markdown; anything special required? (beyond embedded screenshots, bold titles, bullet points or numbered lists)
-#Pound for headings, nothing special beyond that
-
-Log of shots and messages: Ideally this would be shown on the webpage (not console log)?
-Web page history of shots.
-
-Use static images.
-Spend up to an hour trying to figuring out hard problems.
-
-Good to consider: What is the flow between pages for server side.
-
-===============================================
+- I really want to improve on the AI so that it intelligently clusters shots after it hits a ship, but for now I am happy that the basic functionality exists.
